@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+	<persistence-unit name="ITForum" transaction-type="RESOURCE_LOCAL">
+		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+		<class>model.Category</class>
+		<class>model.Email</class>
+		<class>model.Post</class>
+		<class>model.Section</class>
+		<class>model.Status</class>
+		<class>model.Thread</class>
+		<class>model.UserAccount</class>
+		<class>model.UserStatus</class>
+		<properties>
+			<property name="javax.persistence.jdbc.user" value="postgres"/>
+			<property name="javax.persistence.jdbc.password" value="postgres"/>
+			<property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+			<property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/Forum"/>
+			<property name="eclipselink.jdbc.exclusive-connection.mode" value="Transactional"/>
+			<property name="eclipselink.target-database" value="PostgreSQL"/>
+		</properties>
+	</persistence-unit>
+</persistence>
