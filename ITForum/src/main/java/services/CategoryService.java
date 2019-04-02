@@ -29,7 +29,11 @@ public class CategoryService implements IService<Category> {
 	TypedQuery<Category> query = manager.
 		      createNamedQuery("Category.findById", Category.class);
 	query.setParameter("id", ((Integer)Id).intValue());
-	category = query.getSingleResult();
+	try {
+	    category = query.getSingleResult();
+	} catch (Exception e) {
+	    category = null;
+	}
 	manager.getTransaction().commit();
 	manager.close();
 	return category;

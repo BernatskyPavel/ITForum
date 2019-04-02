@@ -6,6 +6,7 @@ import javax.persistence.*;
 import services.StatusService;
 
 import java.sql.Timestamp;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,9 +46,27 @@ public class Category implements Serializable {
 	    ).collect(Collectors.toList());
 	}
 	
+	public List<Category> getApprovedSubCategories(){
+	    return categories.stream().filter(x->
+		StatusService.Statuses.APPROVED.getId()  == x.getStatusBean().getId().intValue() ||
+		StatusService.Statuses.COMPLETED.getId() == x.getStatusBean().getId().intValue() ||
+		StatusService.Statuses.SPAM.getId()      == x.getStatusBean().getId().intValue()
+	    ).collect(Collectors.toList());
+	}
+	
 	public int getPostsNumber() {
 	    List<Thread> threads = getApprovedThreads();
 	    return threads.stream().map(x->x.getApprovedPosts().size()).mapToInt(Integer::intValue).sum();
+	}
+	
+	public Post getLastPost() {
+	    List<Thread> threads = getApprovedThreads();
+	    Comparator<Post> cmp = Comparator.comparing(Post::getCreated);
+	    List<Post> posts = threads.stream().map(Thread::getLastPost).filter(x->x!=null).collect(Collectors.toList());
+	    if(null == posts || posts.isEmpty()) {
+		return null;
+	    }
+	    return posts.stream().max(cmp).orElse(null);
 	}
 	
 	@Id

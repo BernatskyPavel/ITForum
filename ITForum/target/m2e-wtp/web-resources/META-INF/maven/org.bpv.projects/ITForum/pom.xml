@@ -150,6 +150,11 @@
 			<version>3.4.2.Final</version> </dependency> <dependency> <groupId>org.ocpsoft.rewrite</groupId> 
 			<artifactId>rewrite-config-prettyfaces</artifactId> <version>3.4.2.Final</version> 
 			</dependency> -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.8.1</version>
+		</dependency>
 	</dependencies>
 
 	<build>

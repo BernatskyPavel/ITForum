@@ -1,4 +1,4 @@
-package model;
+	package model;
 
 import java.io.Serializable;
 import javax.persistence.*;
@@ -43,8 +43,7 @@ public class UserAccount implements Serializable {
 
 	public UserAccount() {
 	}
-
-
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	public Integer getId() {

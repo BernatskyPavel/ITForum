@@ -25,7 +25,6 @@ public class Post implements Serializable {
 	private Integer id;
 	private String contents;
 	private Timestamp created;
-	private String subject;
 	private Status statusBean;
 	private Thread thread;
 	private UserAccount userAccount;
@@ -60,16 +59,6 @@ public class Post implements Serializable {
 	public void setCreated(Timestamp created) {
 		this.created = created;
 	}
-
-
-	public String getSubject() {
-		return this.subject;
-	}
-
-	public void setSubject(String subject) {
-		this.subject = subject;
-	}
-
 
 	//bi-directional many-to-one association to Status
 	@ManyToOne

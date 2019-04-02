@@ -10,12 +10,61 @@
 
 <h:head></h:head>
 <body>
-	<p:dataTable var="thread" value="#{categoryBean.current_category.approvedThreads}">
-		<p:column headerText="Sub">
-			<h:outputText value="#{thread.subject}">
-			</h:outputText>
-		</p:column>
-		
-	</p:dataTable>
+	<ui:composition template="/shared/layout.xhtml">
+
+	
+		<ui:define name="content">
+
+			<c:if test="#{not empty categoryBean.approvedSubCategories}">
+				<p:dataTable var="subcategory"
+					value="#{categoryBean.approvedSubCategories}"
+					style="margin-bottom:20px;">
+					<p:column headerText="Разделы">
+						<h:outputLink
+							value="#{homeBean.URLWithContextPath}/category.xhtml?id=#{subcategory.id}">
+							<h:outputText value="#{subcategory.name}">
+							</h:outputText>
+						</h:outputLink>
+
+					</p:column>
+					<p:column>
+						<h:outputText value="Темы:#{subcategory.approvedThreads.size()}">
+						</h:outputText>
+						<br />
+						<h:outputText value="Сообщений:#{subcategory.postsNumber}">
+						</h:outputText>
+					</p:column>
+					<p:column headerText="Последнее сообщение">
+						<h:outputText value="#{subcategory.lastPost.thread.subject}">
+						</h:outputText>
+						<br />
+						<h:outputText
+							value="#{subcategory.lastPost.created.toGMTString()} - #{subcategory.lastPost.userAccount.username}">
+						</h:outputText>
+					</p:column>
+				</p:dataTable>
+			</c:if>
+
+			<p:dataTable var="thread"
+				value="#{categoryBean.currentCategory.approvedThreads}">
+				<p:column headerText="Sub">
+					<h:outputLink
+						value="#{homeBean.URLWithContextPath}/thread.xhtml?id=#{thread.id}">
+						<h:outputText value="#{thread.subject}" />
+					</h:outputLink>
+
+				</p:column>
+				<p:column>
+					<h:outputText value="Ответов:#{thread.approvedPosts.size()}">
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Последнее сообщение">
+					<h:outputText style="font-size:11px;"
+						value="#{thread.lastPost.created.toGMTString()} - #{thread.lastPost.userAccount.username}">
+					</h:outputText>
+				</p:column>
+			</p:dataTable>
+		</ui:define>
+	</ui:composition>
 </body>
 </html>

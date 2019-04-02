@@ -2,6 +2,7 @@ package model;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -11,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -24,7 +26,11 @@ import services.StatusService;
  */
 @Entity
 @Table(name="threads")
-@NamedQuery(name="Thread.findAll", query="SELECT t FROM Thread t")
+@NamedQueries({
+    @NamedQuery(name="Thread.findAll", query="SELECT t FROM Thread t"),
+    @NamedQuery(name="Thread.findById", query="SELECT t FROM Thread t where t.id = :id")
+})
+
 public class Thread implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private Integer id;
@@ -45,6 +51,11 @@ public class Thread implements Serializable {
 		StatusService.Statuses.COMPLETED.getId() == x.getStatusBean().getId().intValue() ||
 		StatusService.Statuses.SPAM.getId()      == x.getStatusBean().getId().intValue()
 	    ).collect(Collectors.toList());
+	}
+	
+	public Post getLastPost() {
+	    Comparator<Post> cmp = Comparator.comparing(Post::getCreated);
+	    return getApprovedPosts().stream().max(cmp).orElse(null);
 	}
 	
 	@Id
