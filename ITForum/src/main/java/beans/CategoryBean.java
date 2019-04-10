@@ -15,7 +15,7 @@ import services.CategoryService;
 
 @Named
 @ViewScoped
-public class CategoryBean implements Serializable{
+public class CategoryBean implements Serializable {
     /**
      * 
      */
@@ -24,28 +24,38 @@ public class CategoryBean implements Serializable{
     private List<Category> approvedSubCategories;
     @Inject
     private CategoryService category_service;
+
     @PostConstruct
     public void init() {
-	HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-	currentCategory = category_service.getById(Integer.parseInt(request.getParameter("id")));
-	approvedSubCategories = currentCategory.getApprovedSubCategories();
+	HttpServletRequest request = (HttpServletRequest) FacesContext
+		.getCurrentInstance().getExternalContext()
+		.getRequest();
+	if (request.getHeader("X-Requested-With") == null) {
+	    currentCategory = category_service.getById(
+		    Integer.parseInt(request.getParameter("id")));
+	    approvedSubCategories = currentCategory
+		    .getApprovedSubCategories();
+	}
     }
+
     /**
      * @return the current_category
      */
     public Category getCurrentCategory() {
-        return currentCategory;
+	return currentCategory;
     }
+
     /**
      * @param current_category the current_category to set
      */
     public void setCurrentCategory(Category currentCategory) {
-        this.currentCategory = currentCategory;
+	this.currentCategory = currentCategory;
     }
+
     /**
      * @return the approvedSubCategories
      */
     public List<Category> getApprovedSubCategories() {
-        return approvedSubCategories;
+	return approvedSubCategories;
     }
 }

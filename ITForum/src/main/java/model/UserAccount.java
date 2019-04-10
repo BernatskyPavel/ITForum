@@ -1,10 +1,30 @@
-	package model;
+package model;
 
 import java.io.Serializable;
-import javax.persistence.*;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
+import javax.validation.constraints.Size;
+
+import validators.UniqueEmail;
+import validators.UniqueUsername;
 
 /**
  * The persistent class for the user_accounts database table.
@@ -12,10 +32,18 @@ import java.util.List;
  */
 @Entity
 @Table(name="user_accounts")
-@NamedQuery(name="UserAccount.findAll", query="SELECT u FROM UserAccount u")
+@NamedQueries({
+    @NamedQuery(name="UserAccount.findAll", 		query="SELECT u FROM UserAccount u"),
+    @NamedQuery(name="UserAccount.findById", 		query="SELECT u FROM UserAccount u WHERE u.id = :id"),
+    @NamedQuery(name="UserAccount.findByUsername", 	query="SELECT u FROM UserAccount u WHERE u.username = :username"),
+    @NamedQuery(name="UserAccount.findByEmail",		query="SELECT u FROM UserAccount u WHERE u.email = :email"),
+    @NamedQuery(name="UserAccount.countByUsername",	query="SELECT COUNT(u) FROM UserAccount u WHERE u.username = :username"),
+    @NamedQuery(name="UserAccount.countByEmail",	query="SELECT COUNT(u) FROM UserAccount u WHERE u.email = :email")
+})
+
 public class UserAccount implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private Integer id;
+	private Integer id;	
 	private String about;
 	private String adress;
 	private Timestamp birthday;
@@ -24,8 +52,8 @@ public class UserAccount implements Serializable {
 	private String firstName;
 	private String gender;
 	private String hashedPassword;
-	private Boolean isAdmin;
-	private Boolean isModerator;
+	private Boolean isAdmin = false;
+	private Boolean isModerator = false;
 	private Timestamp lastActivity;
 	private String lastName;
 	private String middleName;
@@ -43,9 +71,10 @@ public class UserAccount implements Serializable {
 
 	public UserAccount() {
 	}
-	
+			
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(generator="my_seq")
+	@SequenceGenerator(name="my_seq", sequenceName="user_accounts_id_seq", allocationSize=1)
 	public Integer getId() {
 		return this.id;
 	}
@@ -81,7 +110,7 @@ public class UserAccount implements Serializable {
 		this.birthday = birthday;
 	}
 
-
+	@Column(insertable =  false)
 	public Timestamp getCreated() {
 		return this.created;
 	}
@@ -90,7 +119,7 @@ public class UserAccount implements Serializable {
 		this.created = created;
 	}
 
-
+	@Column(unique=true)
 	public String getEmail() {
 		return this.email;
 	}
@@ -149,7 +178,7 @@ public class UserAccount implements Serializable {
 	}
 
 
-	@Column(name="last_activity")
+	@Column(name="last_activity", insertable = false)
 	public Timestamp getLastActivity() {
 		return this.lastActivity;
 	}
@@ -196,7 +225,7 @@ public class UserAccount implements Serializable {
 		this.status = status;
 	}
 
-
+	@Column(unique=true)
 	public String getUsername() {
 		return this.username;
 	}

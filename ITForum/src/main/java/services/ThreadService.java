@@ -40,21 +40,21 @@ public class ThreadService implements IService<Thread> {
     }
 
     @Override
-    public void create(Thread entity) {
-	// TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void update(Thread entity) {
-	// TODO Auto-generated method stub
-
-    }
-
-    @Override
     public void deleteById(Object Id) {
 	// TODO Auto-generated method stub
 
+    }
+
+    @Override
+    public Thread create(Thread entity) {
+	// TODO Auto-generated method stub
+	return null;
+    }
+
+    @Override
+    public Thread update(Thread entity) {
+	// TODO Auto-generated method stub
+	return null;
     }
 
 }

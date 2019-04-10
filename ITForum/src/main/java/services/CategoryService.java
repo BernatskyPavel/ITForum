@@ -4,13 +4,11 @@ import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
 import model.Category;
 
-@Named("CategoryService")
 @ApplicationScoped
 public class CategoryService implements IService<Category> {
     @Inject
@@ -40,21 +38,21 @@ public class CategoryService implements IService<Category> {
     }
 
     @Override
-    public void create(Category entity) {
-	// TODO Auto-generated method stub
-	
-    }
-
-    @Override
-    public void update(Category entity) {
-	// TODO Auto-generated method stub
-	
-    }
-
-    @Override
     public void deleteById(Object Id) {
 	// TODO Auto-generated method stub
 	
+    }
+
+    @Override
+    public Category create(Category entity) {
+	// TODO Auto-generated method stub
+	return null;
+    }
+
+    @Override
+    public Category update(Category entity) {
+	// TODO Auto-generated method stub
+	return null;
     }
 
 }

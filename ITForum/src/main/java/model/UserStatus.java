@@ -11,7 +11,11 @@ import java.util.List;
  */
 @Entity
 @Table(name="user_statuses")
-@NamedQuery(name="UserStatus.findAll", query="SELECT u FROM UserStatus u")
+@NamedQueries({
+    @NamedQuery(name="UserStatus.findAll", 	query="SELECT u FROM UserStatus u"),
+    @NamedQuery(name="UserStatus.findById", 	query="SELECT u FROM UserStatus u where u.id = :id")
+})
+
 public class UserStatus implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private Integer id;

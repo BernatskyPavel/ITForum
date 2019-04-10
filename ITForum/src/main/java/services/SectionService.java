@@ -36,20 +36,20 @@ public class SectionService implements IService<Section>{
     }
 
     @Override
-    public void create(Section entity) {
-	// TODO Auto-generated method stub
-	
-    }
-
-    @Override
-    public void update(Section entity) {
-	// TODO Auto-generated method stub
-	
-    }
-
-    @Override
     public void deleteById(Object Id) {
 	// TODO Auto-generated method stub
 	
+    }
+
+    @Override
+    public Section create(Section entity) {
+	// TODO Auto-generated method stub
+	return null;
+    }
+
+    @Override
+    public Section update(Section entity) {
+	// TODO Auto-generated method stub
+	return null;
     }
 }

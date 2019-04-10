@@ -40,21 +40,21 @@ public class StatusService implements IService<Status> {
     }
 
     @Override
-    public void create(Status entity) {
-	// TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void update(Status entity) {
-	// TODO Auto-generated method stub
-
-    }
-
-    @Override
     public void deleteById(Object Id) {
 	// TODO Auto-generated method stub
 
+    }
+
+    @Override
+    public Status create(Status entity) {
+	// TODO Auto-generated method stub
+	return null;
+    }
+
+    @Override
+    public Status update(Status entity) {
+	// TODO Auto-generated method stub
+	return null;
     }
 
 }

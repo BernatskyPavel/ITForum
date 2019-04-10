@@ -20,7 +20,9 @@
 				rel="stylesheet" type="text/css" />
 		</ui:define>
 		<ui:define name="header">
-			
+			<c:if test="#{empty sessionBean}">
+				<h:outputLabel value="#{sessionBean.admin}" />
+			</c:if>
 		</ui:define>
 		<ui:define name="content">
 

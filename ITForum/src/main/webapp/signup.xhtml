@@ -1,0 +1,208 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui"
+	xmlns:of="http://omnifaces.org/functions">
+
+<h:head></h:head>
+<body>
+	<ui:composition template="/shared/layout.xhtml">
+		<ui:define name="links">
+		</ui:define>
+
+		<ui:define name="content">
+			<style type="text/css">
+.label {
+	width: 20%;
+	padding: 4px;
+}
+
+.value {
+	width: 80%;
+	padding: 4px;
+}
+
+.grid {
+	width: 100%;
+}
+
+.error {
+	color: red;
+}
+
+.outputLabel {
+	font-weight: bold;
+}
+
+.grid {
+	width: 33%;
+	padding: 4px;
+}
+</style>
+			<h:form enctype="multipart/form-data">
+				<p:growl id="growl" sticky="true" showDetail="true" />
+
+				<p:wizard flowListener="#{signupBean.onFlowProcess}"
+					nextLabel="Далее" backLabel="Назад">
+					<p:tab id="#{signupBean.ACCOUNT_STEP}" title="Аккаунт">
+						<p:panel header="Основная информация">
+							<p:messages />
+							<h:panelGrid columns="2" columnClasses="label, value">
+								<h:outputText value="Имя пользователя: *"
+									title="Логин (может использоваться при входе вместо почты)" />
+								<p:inputText value="#{signupBean.username}" required="true"
+									requiredMessage="Поле 'Имя пользователя' не может быть пустым"
+									label="Firstname">
+								</p:inputText>
+
+								<h:outputText value="Электронная почта: *"
+									title="Электронная почта (может использоваться при входе вместо имени пользователя)" />
+								<p:inputText value="#{signupBean.email}" required="true"
+									requiredMessage="Поле 'Электронная почта' не может быть пустым"
+									label="Lastname">
+								</p:inputText>
+
+								<h:outputText value="Password: *" />
+								<p:password id="password" value="#{signupBean.password}"
+									required="true"
+									requiredMessage="Поле 'Пароль' не может быть пустым"
+									label="Password">
+								</p:password>
+
+								<h:outputText value="Confirm Password: *" />
+								<p:password id="confirmpass" required="true"
+									requiredMessage="Поле 'Подтверждение пароля' не может быть пустым"
+									label="Confirmation"></p:password>
+								<h:panelGroup>
+									<o:validateEqual id="equal" components="password confirmpass"
+										message="Пароли не совпадают" showMessageFor="password" />
+								</h:panelGroup>
+							</h:panelGrid>
+						</p:panel>
+					</p:tab>
+
+					<p:tab id="#{signupBean.PERSONAL_STEP}" title="О себе">
+						<p:panel header="Информация о себе">
+							<p:messages />
+							<h:panelGrid columns="2" columnClasses="label, value">
+								<h:outputText value="Имя : " />
+								<p:inputText value="#{signupBean.firstName}" />
+								<h:outputText value="Фамилия : " />
+								<p:inputText value="#{signupBean.lastName}" />
+								<h:outputText value="Отчество : " />
+								<p:inputText value="#{signupBean.middleName}" />
+
+								<h:outputText value="Дата рождения : " />
+								<p:calendar value="#{signupBean.birthday}"
+									pattern="dd/MM/yyyy" mask="true" yearRange="c-100:c+10"
+									maxdate="#{signupBean.maxDate}" navigator="true"
+									readonlyInput="true" />
+								<h:outputText value="Пол : " />
+								<p:selectOneMenu value="#{signupBean.gender}"
+									style="width:125px">
+									<f:selectItem itemLabel="Выберите пол" itemValue="" />
+									<f:selectItem itemLabel="Мужской" itemValue="M" />
+									<f:selectItem itemLabel="Женский" itemValue="F" />
+									<f:selectItem itemLabel="Другой" itemValue="O" />
+								</p:selectOneMenu>
+
+								<h:outputText value="Адрес: " />
+								<p:inputText value="#{signupBean.adress}" />
+
+								<h:outputText value="О себе: " />
+								<h:panelGroup>
+									<p:inputTextarea value="#{signupBean.about}" autoResize="true"
+										counter="display" maxlength="2000"
+										counterTemplate="{0} символов осталось" />
+									<br />
+									<h:outputText id="display" style="font-size:11px;" />
+								</h:panelGroup>
+
+							</h:panelGrid>
+						</p:panel>
+					</p:tab>
+
+					<p:tab id="#{signupBean.AVATAR_STEP}" title="Аватарка">
+						<p:panel id="avatar-panel" header="Аватарка для профиля">
+							<p:messages />
+							<h:panelGrid columns="2">
+								<p:outputLabel for="file" value="Аватар" />
+								<p:fileUpload id="file" accept="image/*" sizeLimit="2097152"
+									invalidSizeMessage="Превышен допустимый размер!" fileLimit="1"
+									fileLimitMessage="Только 1 файл!" mode="advanced"
+									fileUploadListener="#{signupBean.handleFileUpload}"
+									update="avatar-panel" cancelLabel="Отменить" label="Выбрать"
+									uploadLabel="Загрузить"> 
+*
+								</p:fileUpload>
+								<h:message id="file_m" for="file" />
+							</h:panelGrid>
+							<p:graphicImage width="150" url="#{signupBean.imageURL}"
+								style="border-radius:5px;" rendered="#{not empty signupBean.imageURL}" />
+						</p:panel>
+					</p:tab>
+
+					<p:tab id="#{signupBean.CONFIRM_STEP}" title="Завершение">
+						<p:panel header="Завершение регистрации">
+							<h3>На указанную почту будет выслано письмо с подтверждением регистрации!</h3>
+							<!-- 							<h:panelGrid id="confirmation" columns="3" -->
+							<!-- 								columnClasses="grid,grid,grid"> -->
+							<!-- 								<h:panelGrid columns="2" columnClasses="label, value"> -->
+							<!-- 									<h:outputText value="Firstname: " /> -->
+							<!-- 									<h:outputText value="#{userWizard.user.firstname}" -->
+							<!-- 										styleClass="outputLabel" /> -->
+
+							<!-- 									<h:outputText value="Lastname: " /> -->
+							<!-- 									<h:outputText value="#{userWizard.user.lastname}" -->
+							<!-- 										styleClass="outputLabel" /> -->
+
+							<!-- 									<h:outputText value="Age: " /> -->
+							<!-- 									<h:outputText value="#{userWizard.user.age}" -->
+							<!-- 										styleClass="outputLabel" /> -->
+							<!-- 								</h:panelGrid> -->
+
+							<!-- 								<h:panelGrid columns="2" columnClasses="label, value"> -->
+							<!-- 									<h:outputText value="Street: " /> -->
+							<!-- 									<h:outputText value="#{userWizard.user.street}" -->
+							<!-- 										styleClass="outputLabel" /> -->
+
+							<!-- 									<h:outputText value="Postal: " /> -->
+							<!-- 									<h:outputText value="#{userWizard.user.postalCode}" -->
+							<!-- 										styleClass="outputLabel" /> -->
+
+							<!-- 									<h:outputText value="City: " /> -->
+							<!-- 									<h:outputText value="#{userWizard.user.city}" -->
+							<!-- 										styleClass="outputLabel" /> -->
+							<!-- 								</h:panelGrid> -->
+
+							<!-- 								<h:panelGrid columns="2" columnClasses="label, value"> -->
+							<!-- 									<h:outputText value="Email: " /> -->
+							<!-- 									<h:outputText value="#{userWizard.user.email}" -->
+							<!-- 										styleClass="outputLabel" /> -->
+
+							<!-- 									<h:outputText value="Phone " /> -->
+							<!-- 									<h:outputText value="#{userWizard.user.phone}" -->
+							<!-- 										styleClass="outputLabel" /> -->
+
+							<!-- 									<h:outputText value="Info: " /> -->
+							<!-- 									<h:outputText value="#{userWizard.user.info}" -->
+							<!-- 										styleClass="outputLabel" /> -->
+
+							<!-- 									<h:outputText /> -->
+							<!-- 									<h:outputText /> -->
+							<!-- 								</h:panelGrid> -->
+							<!-- 							</h:panelGrid> -->
+
+							<p:commandButton value="Submit" action="#{signupBean.save}"
+								update="growl" process="@this" />
+						</p:panel>
+					</p:tab>
+				</p:wizard>
+
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</body>
+</html>

@@ -25,30 +25,30 @@
 		<ui:define name="content">
 			<ui:repeat var="section" value="#{homeBean.activeSections}">
 				<p:dataTable var="category" value="#{section.approvedCategories}">
-						<p:column headerText="Разделы">
-							<h:outputLink
-								value="#{homeBean.URLWithContextPath}/category.xhtml?id=#{category.id}">
-								<h:outputText value="#{category.name}">
-								</h:outputText>
-							</h:outputLink>
+					<p:column headerText="Разделы">
+						<h:outputLink
+							value="#{homeBean.URLWithContextPath}/category.xhtml?id=#{category.id}">
+							<h:outputText value="#{category.name}">
+							</h:outputText>
+						</h:outputLink>
 
-						</p:column>
-						<p:column>
-							<h:outputText value="Темы:#{category.approvedThreads.size()}">
-							</h:outputText>
-							<br />
-							<h:outputText value="Сообщений:#{category.postsNumber}">
-							</h:outputText>
-						</p:column>
-						<p:column headerText="Последнее сообщение">
-							<h:outputText value="#{category.lastPost.thread.subject}">
-							</h:outputText>
-							<br />
-							<h:outputText
-								value="#{category.lastPost.created.toGMTString()} - #{category.lastPost.userAccount.username}">
-							</h:outputText>
-						</p:column>
-					</p:dataTable>
+					</p:column>
+					<p:column>
+						<h:outputText value="Темы:#{category.approvedThreads.size()}">
+						</h:outputText>
+						<br />
+						<h:outputText value="Сообщений:#{category.postsNumber}">
+						</h:outputText>
+					</p:column>
+					<p:column headerText="Последнее сообщение">
+						<h:outputText value="#{category.lastPost.thread.subject}">
+						</h:outputText>
+						<br />
+						<h:outputText
+							value="#{category.lastPost.created.toGMTString()} - #{category.lastPost.userAccount.username}">
+						</h:outputText>
+					</p:column>
+				</p:dataTable>
 
 
 				<!-- 
@@ -132,6 +132,7 @@
 
 		</p:dataTable>-->
 			</ui:repeat>
+
 		</ui:define>
 	</ui:composition>
 

@@ -2,7 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html">
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core_1_1">
 <h:head>
 	<link href="${homeBean.URLWithContextPath}/resources/css/style.css"
 		rel="stylesheet" type="text/css" />
@@ -10,6 +12,15 @@
 	</ui:insert>
 </h:head>
 <h:body>
+	<style>
+#header {
+	background: linear-gradient(#222, #444, #222);
+}
+
+#header-parent {
+	margin-bottom: 2%;
+}
+</style>
 	<!-- <div id="page">
 		<div id="header-container">
 			<div id="header">
@@ -44,47 +55,66 @@
 		</div>
 	</div> -->
 	<div class="ui-g">
-		<div class="ui-lg-12 ui-g-nopad">
-			<div id="header">
-				<ui:insert name="header">
-					<p>Header</p>
+		<div class="ui-lg-12 ui-md-6 ui-lg-3 ui-g-nopad" id="header-parent">
+			<h:panelGroup id="headerPanel">
+				<div id="header" class="ui-g">
+					<div class="ui-lg-4 ui-g-nopad">
+						<h:outputLink value="#{homeBean.URLWithContextPath}">
+							<h:graphicImage value="/resources/images/logo.png" />
+						</h:outputLink>
+					</div>
+					<div class="ui-lg-8 ui-g-nopad">
+
+						<div class="ui-g" style="height: 100%;">
+
+							<div class="ui-lg-2 ui-g-nopad"></div>
+							<div class="ui-lg-2 ui-g-nopad"></div>
+							<div class="ui-lg-2 ui-g-nopad"></div>
+							<div class="ui-lg-2 ui-g-nopad"></div>
+							<div class="ui-lg-2 ui-g-nopad"
+								style="margin: auto; text-align: center;">
+								<h:form>
+									<p:commandButton value="Вход" id="ajax-login"
+										actionListener="#{layoutBean.viewLoginForm}"
+										styleClass="ui-priority-primary"
+										rendered="#{sessionBean.loginStatus == false}">
+										<p:ajax event="dialogReturn"
+											update=":headerPanel, :contentPanel" />
+
+									</p:commandButton>
+									<p:linkButton value="Кабинет" id="cabinet"
+										styleClass="ui-priority-primary"
+										rendered="#{sessionBean.loginStatus == true}"
+										href="${homeBean.URLWithContextPath}/user?id=${sessionBean.user.id}">
+									</p:linkButton>
+								</h:form>
+							</div>
+							<div class="ui-lg-2 ui-g-nopad" style="margin: auto;">
+								<p:commandButton value="Регистрация" id="signup" action="signup"
+									styleClass="ui-priority-primary"
+									rendered="#{sessionBean.loginStatus == false}">
+								</p:commandButton>
+								<p:commandButton value="Выход" id="logout"
+									actionListener="#{sessionBean.logout}"
+									styleClass="ui-priority-primary"
+									rendered="#{sessionBean.loginStatus == true}"
+									update=":headerPanel, :contentPanel">
+								</p:commandButton>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</h:panelGroup>
+		</div>
+		<div class="ui-lg-12 ui-md-6 ui-lg-3 ui-g-nopad" style="margin: 2%;">
+			<h:panelGroup id="contentPanel">
+				<ui:insert name="content">
+					<p>Main content</p>
 				</ui:insert>
-			</div>
+			</h:panelGroup>
 		</div>
-		<div class="ui-lg-12 ui-g-nopad">
-			<div class="ui-g">
-				<div class="ui-lg-2 ui-g-nopad">
-					<div class="ui-g">
-						<div class="ui-lg-1 ui-g-nopad"></div>
-						<div class="ui-lg-10 ui-g-nopad">
-							<ui:insert name="leftnav">
-								<p>Sidebar/Left-nav</p>
-							</ui:insert>
-						</div>
-						<div class="ui-lg-1 ui-g-nopad"></div>
-					</div>
-
-				</div>
-				<div class="ui-lg-8 ui-g-nopad">
-					<ui:insert name="content">
-						<p>Main content</p>
-					</ui:insert>
-				</div>
-				<div class="ui-lg-2 ui-g-nopad">
-					<div class="ui-g">
-						<div class="ui-lg-1 ui-g-nopad"></div>
-						<div class="ui-lg-10 ui-g-nopad">
-							<ui:insert name="rightnav">
-								<p>Sidebar/Right-nav</p>
-							</ui:insert>
-						</div>
-						<div class="ui-lg-1 ui-g-nopad"></div>
-					</div>
-
-				</div>
-			</div>
-		</div>
-		<div class="ui-lg-12 ui-g-nopad">
+		<div class="ui-lg-12 ui-md-6 ui-lg-3 ui-g-nopad">
 			<div id="footer">
 				<ui:insert name="footer">
 					<p>Footer</p>

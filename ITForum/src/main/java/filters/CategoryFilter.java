@@ -26,18 +26,25 @@ public class CategoryFilter implements Filter {
 	    throws IOException, ServletException {
 	HttpServletRequest  httprequest =  (HttpServletRequest)  request;
 	HttpServletResponse httpresponse = (HttpServletResponse) response;
-	
+	if(httprequest.getHeader("X-Requested-With") != null) {
+	    chain.doFilter(request, response);
+	    return;
+	}
 	String id = httprequest.getParameter("id");
 	if(null == id) {
 	    httpresponse.sendRedirect(httprequest.getContextPath() + "/home.xhtml");
+	    return;
 	}
 	if(!StringUtils.isNumeric(id)) {
 	    httpresponse.sendRedirect(httprequest.getContextPath() + "/home.xhtml");
+	    return;
 	}
 	if(null == categoryService.getById(Integer.parseInt(id))){
 	    httpresponse.sendRedirect(httprequest.getContextPath() + "/home.xhtml");
+	    return;
 	}
 	chain.doFilter(request, response);
+	return;
     }
 
 }
