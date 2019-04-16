@@ -7,8 +7,6 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 import javax.annotation.PostConstruct;
-import javax.ejb.Asynchronous;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;

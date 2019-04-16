@@ -5,27 +5,25 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:scriptfree="http://jakarta.apache.org/taglibs/standard/scriptfree"
 	xmlns:permittedTaglibs="http://jakarta.apache.org/taglibs/standard/permittedTaglibs"
-	xmlns:sql="http://java.sun.com/jsp/jstl/sql"
-	xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
-	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-	xmlns:c="http://java.sun.com/jsp/jstl/core_1_1"
-	xmlns:x="http://java.sun.com/jsp/jstl/xml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:p="http://primefaces.org/ui">
 
 <h:head></h:head>
-<body>
+<h:body>
 	<ui:composition template="/shared/layout.xhtml">
 		<ui:define name="links">
+			<script
+				src="${homeBean.URLWithContextPath}/resources/js/jquery-3.4.0.min.js" />
+			<script src="${homeBean.URLWithContextPath}/ckeditor/ckeditor.js" />
+			<script
+				src="${homeBean.URLWithContextPath}/resources/js/runnableCode.js" />
 			<link href="${homeBean.URLWithContextPath}/resources/css/thread.css"
 				rel="stylesheet" type="text/css" />
 		</ui:define>
-		<ui:define name="header">
-			<c:if test="#{empty sessionBean}">
-				<h:outputLabel value="#{sessionBean.admin}" />
-			</c:if>
-		</ui:define>
 		<ui:define name="content">
-
+			<h:form>
+				<p:poll interval="30" listener="#{threadBean.update}" update="basic" ></p:poll>
+			</h:form>
 			<p:panel id="basic" header="#{threadBean.currentThread.subject}"
 				style="margin-bottom:20px">
 				<h:panelGrid columns="2" style="width:auto"
@@ -71,59 +69,60 @@
 				</p:panel>
 
 			</p:dataList> -->
+			<h:panelGroup id="postsPanel">
+				<h:form id="form">
+					<p:dataView var="post" value="#{threadBean.approvedPosts}"
+						rows="10" paginator="true" rowsPerPageTemplate="5,10,15"
+						paginatorPosition="bottom"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						layout="list" paginatorAlwaysVisible="false">
 
-			<h:form id="form">
-				<p:dataView var="post" value="#{threadBean.approvedPosts}" rows="10"
-					paginator="true" rowsPerPageTemplate="5,10,15"
-					paginatorPosition="bottom"
-					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-					layout="list" paginatorAlwaysVisible="false">
+						<p:dataViewListItem>
+							<h:panelGrid columns="2" style="width:auto"
+								columnClasses="logo,detail">
+								<p:outputPanel styleClass="postUser">
+									<h:outputLink
+										value="#{homeBean.URLWithContextPath}/user.xhtml?id=#{post.userAccount.id}">
+										<h:outputText value="#{post.userAccount.username}"
+											styleClass="postUsername">
+										</h:outputText>
+									</h:outputLink>
+									<br />
+									<p:graphicImage
+										url="#{homeBean.URLWithContextPath}/resources/images/man-no.png"
+										height="120px" width="120px" />
+								</p:outputPanel>
+								<p:outputPanel>
+									<h:outputText value="#{post.contents}" escape="false" />
+								</p:outputPanel>
 
-					<p:dataViewListItem>
-						<h:panelGrid columns="2" style="width:auto"
-							columnClasses="logo,detail">
-							<p:outputPanel styleClass="postUser">
-								<h:outputLink
-									value="#{homeBean.URLWithContextPath}/user.xhtml?id=#{post.userAccount.id}">
-									<h:outputText value="#{post.userAccount.username}"
-										styleClass="postUsername">
-									</h:outputText>
-								</h:outputLink>
-								<br />
-								<p:graphicImage
-									url="#{homeBean.URLWithContextPath}/resources/images/man-no.png"
-									height="120px" width="120px" />
-							</p:outputPanel>
-							<p:outputPanel>
-								<h:outputText value="#{post.contents}" escape="false" />
-							</p:outputPanel>
-
-							<!-- 							<p:commandLink update=":form:carDetail"
+								<!-- 							<p:commandLink update=":form:carDetail"
 								oncomplete="PF('carDialog').show()" title="View Detail">
 								<h:outputText styleClass="ui-icon pi pi-search"
 									style="margin:0 auto;" />
 								<f:setPropertyActionListener value="#{car}"
 									target="#{dataGridView.selectedCar}" />
 							</p:commandLink> -->
-						</h:panelGrid>
+							</h:panelGrid>
 
-					</p:dataViewListItem>
-				</p:dataView>
-			</h:form>
-
+						</p:dataViewListItem>
+					</p:dataView>
+				</h:form>
+			</h:panelGroup>
 			<br />
-			<h:form>
-				<p:textEditor value="${threadBean.postText}" styleClass="post-editor">
-				</p:textEditor>
-				<p:remoteCommand name="rc" update="msgs"
-					action="#{threadBean.showMessage}" />
-
-				<p:growl id="msgs" showDetail="true" />
-				<p:commandButton type="button" onclick="rc()" value="Execute"
-					icon="pi pi-refresh" />
+			<h:form rendered="#{sessionBean.loginStatus == true}"
+				prependId="false">
+				<div id="editor"></div>
+				<h:inputHidden value="#{threadBean.postText}" id="editorValue" />
+				<p:commandButton
+					onclick="document.getElementById('editorValue').value = CKEDITOR.instances.editor.getData();"
+					action="#{threadBean.createPost()}" value="Post"
+					update=":postsPanel" />
 			</h:form>
-
+			<script>
+				CKEDITOR.replace( 'editor');
+			</script>
 		</ui:define>
 	</ui:composition>
-</body>
+</h:body>
 </html>

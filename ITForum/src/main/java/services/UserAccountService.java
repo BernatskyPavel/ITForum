@@ -5,19 +5,15 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
-import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.routines.EmailValidator;
 
-import model.Thread;
 import model.UserAccount;
 import model.UserStatus;
 
-@Named
 @ApplicationScoped
 public class UserAccountService implements IService<UserAccount> {
     @Inject

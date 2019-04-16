@@ -51,4 +51,20 @@ public class ServiceBean implements Serializable {
 	    e.printStackTrace();
 	}
     }
+
+
+    /**
+     * @return the message
+     */
+    public String getMessage() {
+	return Message;
+    }
+
+
+    /**
+     * @param message the message to set
+     */
+    public void setMessage(String message) {
+	Message = message;
+    }
 }

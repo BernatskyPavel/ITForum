@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
@@ -14,7 +14,7 @@ import model.Category;
 import services.CategoryService;
 
 @Named
-@ViewScoped
+@RequestScoped
 public class CategoryBean implements Serializable {
     /**
      * 
@@ -37,7 +37,6 @@ public class CategoryBean implements Serializable {
 		    .getApprovedSubCategories();
 	}
     }
-
     /**
      * @return the current_category
      */

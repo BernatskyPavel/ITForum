@@ -40,6 +40,10 @@ public class HomeBean implements Serializable{
 	return sections.stream().filter(x->StatusService.Statuses.APPROVED.getId() == x.getStatusBean().getId().intValue()).collect(Collectors.toList());
     }
     
+    public void refresh() {
+	sections = section_service.getAll();
+    }
+    
     /**
      * @return the hello
      */

@@ -3,13 +3,14 @@ package model;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 
@@ -33,7 +34,8 @@ public class Post implements Serializable {
 	}
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(generator="my_post_seq")
+	@SequenceGenerator(name="my_post_seq", sequenceName="posts_id_seq", allocationSize=1)
 	public Integer getId() {
 		return this.id;
 	}
@@ -51,7 +53,7 @@ public class Post implements Serializable {
 		this.contents = contents;
 	}
 
-
+	@Column(insertable = false)
 	public Timestamp getCreated() {
 		return this.created;
 	}

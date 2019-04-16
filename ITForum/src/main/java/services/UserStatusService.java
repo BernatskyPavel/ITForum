@@ -4,14 +4,11 @@ import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
-import model.Category;
 import model.UserStatus;
 
-@Named
 @ApplicationScoped
 public class UserStatusService implements IService<UserStatus> {
     @Inject

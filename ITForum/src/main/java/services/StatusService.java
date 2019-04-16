@@ -3,14 +3,18 @@ package services;
 import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Named;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 
 import model.Status;
 
-@Named("StatusService")
 @ApplicationScoped
 public class StatusService implements IService<Status> {
 
+    @Inject
+    private DbService DbManager;
+    
     public static enum Statuses {
 	WAITING (1),
 	APPROVED (2),
@@ -35,8 +39,20 @@ public class StatusService implements IService<Status> {
 
     @Override
     public Status getById(Object Id) {
-	// TODO Auto-generated method stub
-	return null;
+	Status status = null;
+	EntityManager manager = DbManager.getManager();
+	manager.getTransaction().begin();
+	TypedQuery<Status> query = manager.
+		      createNamedQuery("Status.findById", Status.class);
+	query.setParameter("id", ((Integer)Id).intValue());
+	try {
+	    status = query.getSingleResult();
+	} catch (Exception e) {
+	    status = null;
+	}
+	manager.getTransaction().commit();
+	manager.close();
+	return status;
     }
 
     @Override

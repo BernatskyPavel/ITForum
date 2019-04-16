@@ -4,13 +4,11 @@ import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
 import model.Thread;
 
-@Named("ThreadService")
 @ApplicationScoped
 public class ThreadService implements IService<Thread> {
     @Inject

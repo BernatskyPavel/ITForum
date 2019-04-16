@@ -54,8 +54,8 @@ public class SessionBean implements Serializable {
 	if (this.tempUser == null) {
 	    this.tempUser = userAccountService.getByLogin(this.login);
 	} else {
-	    if (tempUser.getUsername() != this.login
-		    && tempUser.getEmail() != this.login)
+	    if (!tempUser.getUsername().equals(this.login)
+		    && !tempUser.getEmail().equals(this.login))
 		this.tempUser = userAccountService
 			.getByLogin(this.login);
 	}
@@ -71,6 +71,7 @@ public class SessionBean implements Serializable {
 		    this.user = tempUser;
 		    this.login = StringUtils.EMPTY;
 		    this.password = StringUtils.EMPTY;
+		    this.tempUser = null;
 		    PrimeFaces.current().dialog().closeDynamic(null);
 		    System.out.println("Valid");
 		    return;

@@ -7,7 +7,9 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.annotation.WebFilter;
 
+@WebFilter(urlPatterns = {"/thread.xhtml"})
 public class ThreadFilter implements Filter {
 
     @Override
@@ -15,7 +17,7 @@ public class ThreadFilter implements Filter {
 	    ServletResponse response, FilterChain chain)
 	    throws IOException, ServletException {
 	// TODO Auto-generated method stub
-
+	chain.doFilter(request, response);
     }
 
 }
