@@ -22,7 +22,7 @@
 		</ui:define>
 		<ui:define name="content">
 			<h:form>
-				<p:poll interval="30" listener="#{threadBean.update}" update="basic" ></p:poll>
+				<p:poll interval="30" listener="#{threadBean.update}" update=":postsPanel, basic" ></p:poll>
 			</h:form>
 			<p:panel id="basic" header="#{threadBean.currentThread.subject}"
 				style="margin-bottom:20px">
@@ -115,7 +115,7 @@
 				<div id="editor"></div>
 				<h:inputHidden value="#{threadBean.postText}" id="editorValue" />
 				<p:commandButton
-					onclick="document.getElementById('editorValue').value = CKEDITOR.instances.editor.getData();"
+					onclick="document.getElementById('editorValue').value = CKEDITOR.instances.editor.getData();CKEDITOR.instances.editor.setData();"
 					action="#{threadBean.createPost()}" value="Post"
 					update=":postsPanel" />
 			</h:form>

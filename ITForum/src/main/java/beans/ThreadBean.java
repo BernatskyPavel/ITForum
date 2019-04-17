@@ -5,12 +5,15 @@ import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.enterprise.inject.Model;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
@@ -42,7 +45,8 @@ public class ThreadBean implements Serializable {
     private UpdateHistoryService history;
     private Thread currentThread;
     private List<Post> approvedPosts;
-    
+    @NotNull(message = "Сообщение не может быть пустым!")
+    @Size(max = 20000, message = "Превышен максимальный размер!")
     private String postText;
     //https://www.youtube.com/watch?v=oD9dU_hGjLc
     
@@ -67,6 +71,7 @@ public class ThreadBean implements Serializable {
 	homeBean.refresh();
 	approvedPosts = currentThread.getApprovedPosts();
 	this.postText = StringUtils.EMPTY;
+	this.lastUpdateHash = DigestUtils.md5Hex((new Date()).toString());
     }
     
     public void update() {
