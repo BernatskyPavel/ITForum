@@ -10,6 +10,8 @@
 		<class>model.Thread</class>
 		<class>model.UserAccount</class>
 		<class>model.UserStatus</class>
+		<class>model.Blacklist</class>
+		<class>model.Friendlist</class>
 		<properties>
 			<property name="javax.persistence.jdbc.user" value="postgres"/>
 			<property name="javax.persistence.jdbc.password" value="postgres"/>

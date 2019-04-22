@@ -1,22 +1,68 @@
 package services;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 
+import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+
 @ApplicationScoped
+//@Singleton
 public class UpdateHistoryService {
     private static final String STARTHASH = "B078FFD28DB767C502AC367053F6E0AC";
     private String lastGlobalThreadUpdateHash;
     private String lastGlobalHomeUpdateHash;
     private String lastGlobalCategoryUpdateHash;
     
+    private Int2ObjectMap<String> CFTHashes;
+    private Int2ObjectMap<String> UFEHashes;
+    private Int2ObjectMap<String> UFLHashes;
+    
+    @PostConstruct
     public void init() {
 	setLastGlobalThreadUpdateHash(STARTHASH);
 	setLastGlobalHomeUpdateHash(STARTHASH);
 	setLastGlobalCategoryUpdateHash(STARTHASH);
+	this.CFTHashes = new Int2ObjectArrayMap<String>();
+	this.UFEHashes = new Int2ObjectArrayMap<String>();
+	this.UFLHashes = new Int2ObjectArrayMap<String>();
     }
 
-    
+    public void setCFTHash(int id, String value) {
+	if(this.CFTHashes.containsKey(id)) {
+	    this.CFTHashes.replace(id, value);
+	}else{
+	    this.CFTHashes.put(id, value);
+	}
+    }
 
+    public String getCFTHash(int id) {
+	return this.CFTHashes.getOrDefault(id, STARTHASH);
+    }
+    
+    public void setUFEHash(int id, String value) {
+	if(this.UFEHashes.containsKey(id)) {
+	    this.UFEHashes.replace(id, value);
+	}else{
+	    this.UFEHashes.put(id, value);
+	}
+    }
+
+    public String getUFEHash(int id) {
+	return this.UFEHashes.getOrDefault(id, STARTHASH);
+    }
+    
+    public void setUFLHash(int id, String value) {
+	if(this.UFLHashes.containsKey(id)) {
+	    this.UFLHashes.replace(id, value);
+	}else{
+	    this.UFLHashes.put(id, value);
+	}
+    }
+
+    public String getUFLHash(int id) {
+	return this.UFLHashes.getOrDefault(id, STARTHASH);
+    }
     /**
      * @return the starthash
      */

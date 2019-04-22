@@ -65,19 +65,25 @@ public class SessionBean implements Serializable {
 			    .getId())) {
 		this.message = "Учетная запись не активирована.";
 	    } else {
-		if (hasher.verify(tempUser.getHashedPassword(),
-			this.password)) {
-		    isLogin = true;
-		    this.user = tempUser;
-		    this.login = StringUtils.EMPTY;
-		    this.password = StringUtils.EMPTY;
-		    this.tempUser = null;
-		    PrimeFaces.current().dialog().closeDynamic(null);
-		    System.out.println("Valid");
-		    return;
+		if (tempUser.isBlocked()) {
+		    this.message = "Учётная запись заблокирована!";
+		    tempUser = null;
 		} else {
-		    this.message = "Неверный пароль.";
-		    System.out.println("Not Valid");
+		    if (hasher.verify(tempUser.getHashedPassword(),
+			    this.password)) {
+			isLogin = true;
+			this.user = tempUser;
+			this.login = StringUtils.EMPTY;
+			this.password = StringUtils.EMPTY;
+			this.tempUser = null;
+			PrimeFaces.current().dialog()
+				.closeDynamic(null);
+			System.out.println("Valid");
+			return;
+		    } else {
+			this.message = "Неверный пароль.";
+			System.out.println("Not Valid");
+		    }
 		}
 	    }
 	} else {
@@ -88,10 +94,15 @@ public class SessionBean implements Serializable {
     }
 
     public void logout() {
-	HttpSession session = (HttpSession) FacesContext
-		.getCurrentInstance().getExternalContext()
-		.getSession(false);
-	session.invalidate();
+	FacesContext.getCurrentInstance().getExternalContext()
+		.invalidateSession();
+	// FacesContext.getCurrentInstance().getExternalContext().redirect();
+	return;
+    }
+
+    public void refresh() {
+	this.user = this.userAccountService
+		.getById(this.user.getId());
     }
 
     public void wipe() {

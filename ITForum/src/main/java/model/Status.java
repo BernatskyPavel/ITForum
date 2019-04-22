@@ -2,6 +2,7 @@ package model;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
 import java.util.List;
 
 
@@ -23,7 +24,8 @@ public class Status implements Serializable {
 	private List<Post> posts;
 	private List<Section> sections;
 	private List<Thread> threads;
-
+	private List<Email> emails;
+	
 	public Status() {
 	}
 
@@ -145,6 +147,29 @@ public class Status implements Serializable {
 		thread.setStatusBean(null);
 
 		return thread;
+	}
+	
+	@OneToMany(mappedBy="statusBean")
+	public List<Email> getEmails() {
+		return this.emails;
+	}
+
+	public void setEmails(List<Email> emails) {
+		this.emails = emails;
+	}
+
+	public Email addEmail(Email email) {
+		getEmails().add(email);
+		email.setStatusBean(this);
+
+		return email;
+	}
+
+	public Email removeEmail(Email email) {
+		getEmails().remove(email);
+		email.setStatusBean(null);
+
+		return email;
 	}
 
 }

@@ -6,16 +6,18 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import services.StatusService;
 
@@ -44,7 +46,7 @@ public class Thread implements Serializable {
 
 	public Thread() {
 	}
-
+	@Transient
 	public List<Post> getApprovedPosts(){
 	    return posts.stream().filter(x->
 		StatusService.Statuses.APPROVED.getId()  == x.getStatusBean().getId().intValue() ||
@@ -52,14 +54,30 @@ public class Thread implements Serializable {
 		StatusService.Statuses.SPAM.getId()      == x.getStatusBean().getId().intValue()
 	    ).collect(Collectors.toList());
 	}
-	
+	@Transient
 	public Post getLastPost() {
 	    Comparator<Post> cmp = Comparator.comparing(Post::getCreated);
 	    return getApprovedPosts().stream().max(cmp).orElse(null);
 	}
 	
+	@Transient
+	public boolean isCompleted() {
+	    return this.statusBean.getId().intValue() == StatusService.Statuses.COMPLETED.getId();
+	}
+	
+	@Transient
+	public boolean isBlocked() {
+	    return this.statusBean.getId().intValue() == StatusService.Statuses.BLOCKED.getId();
+	}
+	
+	@Transient
+	public boolean isWaiting() {
+	    return this.statusBean.getId().intValue() == StatusService.Statuses.WAITING.getId();
+	}
+	
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(generator="my_thread_seq")
+	@SequenceGenerator(name="my_thread_seq", sequenceName="threads_id_seq", allocationSize=1)
 	public Integer getId() {
 		return this.id;
 	}
@@ -77,7 +95,7 @@ public class Thread implements Serializable {
 		this.content = content;
 	}
 
-
+	@Column(insertable = false)
 	public Timestamp getCreated() {
 		return this.created;
 	}

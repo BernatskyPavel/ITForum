@@ -1,6 +1,7 @@
 package beans;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -9,9 +10,18 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import org.apache.commons.codec.digest.DigestUtils;
 
 import model.Category;
+import model.Thread;
+import services.ApplicationService;
 import services.CategoryService;
+import services.StatusService;
+import services.ThreadService;
+import services.UpdateHistoryService;
 
 @Named
 @ViewScoped
@@ -23,7 +33,22 @@ public class CategoryBean implements Serializable {
     private Category currentCategory;
     private List<Category> approvedSubCategories;
     @Inject
-    private CategoryService category_service;
+    private ApplicationService applicationService;
+    @Inject
+    private CategoryService categoryService;
+    @Inject
+    private SessionBean session;
+    @Inject
+    private ThreadService threadService;
+    @Inject
+    private UpdateHistoryService history;
+    private Thread selectedThread;
+    private String updateThreadHash;
+    @NotNull
+    @Size(max = 255, message = "Превышен максимальный размер!")
+    private String newPostHeader;
+    @NotNull
+    private String newPostContent;
 
     @PostConstruct
     public void init() {
@@ -31,12 +56,82 @@ public class CategoryBean implements Serializable {
 		.getCurrentInstance().getExternalContext()
 		.getRequest();
 	if (request.getHeader("X-Requested-With") == null) {
-	    currentCategory = category_service.getById(
+	    this.currentCategory = this.categoryService.getById(
 		    Integer.parseInt(request.getParameter("id")));
-	    approvedSubCategories = currentCategory
+	    this.approvedSubCategories = this.currentCategory
 		    .getApprovedSubCategories();
 	}
+	this.updateThreadHash = UpdateHistoryService.getStarthash();
     }
+
+    public void refresh() {
+	String CFTHash = history
+		.getCFTHash(this.currentCategory.getId().intValue());
+	if (!CFTHash.equals(this.updateThreadHash)) {
+	    this.currentCategory = this.categoryService
+		    .getById(this.currentCategory.getId());
+	    this.approvedSubCategories = this.currentCategory
+		    .getApprovedSubCategories();
+	    this.updateThreadHash = CFTHash;
+	}
+    }
+
+    public void createThread() {
+	if (!this.session.getUser().isBlocked()) {
+	    model.Thread thread = new model.Thread();
+	    thread.setSubject(this.applicationService.censoredText(this.newPostHeader));
+	    thread.setContent(this.applicationService.censoredText(this.newPostContent));
+	    thread.setCategoryBean(this.currentCategory);
+	    thread.setUserAccount(session.getUser());
+	    this.threadService.create(thread);
+	    this.currentCategory = this.categoryService
+		    .getById(this.currentCategory.getId());
+	    this.approvedSubCategories = this.currentCategory
+		    .getApprovedSubCategories();
+	    this.updateThreadHash = DigestUtils
+		    .md5Hex((new Date()).toString());
+	    this.history.setCFTHash(
+		    this.currentCategory.getId().intValue(),
+		    this.updateThreadHash);
+	}
+    }
+
+    public void completeThread() {
+	if (null != this.selectedThread) {
+	    this.threadService.changeStatus(selectedThread,
+		    StatusService.Statuses.COMPLETED.getId());
+	    this.update();
+	}
+    }
+
+    public void blockThread() {
+	if (null != this.selectedThread) {
+	    this.threadService.changeStatus(selectedThread,
+		    StatusService.Statuses.BLOCKED.getId());
+	    this.update();
+	}
+    }
+
+    public void unblockThread() {
+	if (null != this.selectedThread) {
+	    this.threadService.changeStatus(selectedThread,
+		    StatusService.Statuses.APPROVED.getId());
+	    this.update();
+	}
+    }
+
+    private void update() {
+	this.currentCategory = this.categoryService
+		.getById(this.currentCategory.getId());
+	this.approvedSubCategories = this.currentCategory
+		.getApprovedSubCategories();
+	this.updateThreadHash = DigestUtils
+		.md5Hex((new Date()).toString());
+	this.history.setCFTHash(
+		this.currentCategory.getId().intValue(),
+		this.updateThreadHash);
+    }
+
     /**
      * @return the current_category
      */
@@ -56,5 +151,47 @@ public class CategoryBean implements Serializable {
      */
     public List<Category> getApprovedSubCategories() {
 	return approvedSubCategories;
+    }
+
+    /**
+     * @return the newPostHeader
+     */
+    public String getNewPostHeader() {
+	return newPostHeader;
+    }
+
+    /**
+     * @param newPostHeader the newPostHeader to set
+     */
+    public void setNewPostHeader(String newPostHeader) {
+	this.newPostHeader = newPostHeader;
+    }
+
+    /**
+     * @return the newPostContent
+     */
+    public String getNewPostContent() {
+	return newPostContent;
+    }
+
+    /**
+     * @param newPostContent the newPostContent to set
+     */
+    public void setNewPostContent(String newPostContent) {
+	this.newPostContent = newPostContent;
+    }
+
+    /**
+     * @return the selectedThread
+     */
+    public Thread getSelectedThread() {
+	return selectedThread;
+    }
+
+    /**
+     * @param selectedThread the selectedThread to set
+     */
+    public void setSelectedThread(Thread selectedThread) {
+	this.selectedThread = selectedThread;
     }
 }

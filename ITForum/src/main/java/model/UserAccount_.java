@@ -6,7 +6,7 @@ import javax.persistence.metamodel.ListAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
-@Generated(value="Dali", date="2019-04-07T23:39:09.127+0300")
+@Generated(value="Dali", date="2019-04-22T05:36:49.954+0300")
 @StaticMetamodel(UserAccount.class)
 public class UserAccount_ {
 	public static volatile SingularAttribute<UserAccount, Integer> id;
@@ -28,6 +28,10 @@ public class UserAccount_ {
 	public static volatile ListAttribute<UserAccount, Section> sections;
 	public static volatile ListAttribute<UserAccount, Thread> threads;
 	public static volatile SingularAttribute<UserAccount, UserStatus> userStatusBean;
+	public static volatile ListAttribute<UserAccount, Blacklist> blacklists1;
+	public static volatile ListAttribute<UserAccount, Blacklist> blacklists2;
+	public static volatile ListAttribute<UserAccount, Friendlist> friendlists1;
+	public static volatile ListAttribute<UserAccount, Friendlist> friendlists2;
 	public static volatile SingularAttribute<UserAccount, String> about;
 	public static volatile SingularAttribute<UserAccount, String> adress;
 	public static volatile SingularAttribute<UserAccount, Timestamp> birthday;

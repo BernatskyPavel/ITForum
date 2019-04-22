@@ -11,59 +11,156 @@
 <h:head></h:head>
 <body>
 	<ui:composition template="/shared/layout.xhtml">
-
-	
+		<ui:define name="links">
+			<script src="${homeBean.URLWithContextPath}/ckeditor/ckeditor.js" />
+		</ui:define>
 		<ui:define name="content">
+			<h:form>
+				<p:poll interval="60" update="threadsPanel"
+					listener="#{categoryBean.refresh}"></p:poll>
+			</h:form>
+			<h:panelGroup id="categoriesPanel">
+				<c:if test="#{not empty categoryBean.approvedSubCategories}">
+					<p:dataTable var="subcategory"
+						value="#{categoryBean.approvedSubCategories}"
+						style="margin-bottom:20px;">
+						<p:column headerText="Разделы">
+							<h:outputLink
+								value="#{homeBean.URLWithContextPath}/category.xhtml?id=#{subcategory.id}">
+								<h:outputText value="#{subcategory.name}">
+								</h:outputText>
+							</h:outputLink>
 
-			<c:if test="#{not empty categoryBean.approvedSubCategories}">
-				<p:dataTable var="subcategory"
-					value="#{categoryBean.approvedSubCategories}"
-					style="margin-bottom:20px;">
-					<p:column headerText="Разделы">
-						<h:outputLink
-							value="#{homeBean.URLWithContextPath}/category.xhtml?id=#{subcategory.id}">
-							<h:outputText value="#{subcategory.name}">
+						</p:column>
+						<p:column>
+							<h:outputText value="Темы:#{subcategory.approvedThreads.size()}">
 							</h:outputText>
+							<br />
+							<h:outputText value="Сообщений:#{subcategory.postsNumber}">
+							</h:outputText>
+						</p:column>
+						<p:column headerText="Последнее сообщение">
+							<h:outputText value="#{subcategory.lastPost.thread.subject}">
+							</h:outputText>
+							<br />
+							<h:outputText
+								value="#{subcategory.lastPost.created.toGMTString()} - #{subcategory.lastPost.userAccount.username}">
+							</h:outputText>
+						</p:column>
+					</p:dataTable>
+				</c:if>
+			</h:panelGroup>
+			<h:panelGroup id="threadsPanel">
+				<p:dataTable var="thread"
+					value="#{categoryBean.currentCategory.approvedThreads}">
+					<f:facet name="header">
+						<p:commandButton icon="fa fa-plus" value="Создать"
+							onclick="PF('bar').show()"
+							rendered="#{sessionBean.loginStatus == true}" />
+					</f:facet>
+					<p:column headerText="Sub">
+						<h:outputLink
+							value="#{homeBean.URLWithContextPath}/thread.xhtml?id=#{thread.id}">
+							<h:outputText value="#{thread.subject}" />
 						</h:outputLink>
-
+					</p:column>
+					<p:column headerText="Модерация"
+						rendered="#{sessionBean.loginStatus == true and (sessionBean.user.isModerator == true or sessionBean.user.isAdmin)}">
+						<h:form prependId="false">
+							<p:commandLink styleClass="fa fa-fw fa-ban" title="Заблокировать"
+								actionListener="#{categoryBean.blockThread}" update=":blockedPanel, :threadsPanel">
+								<f:setPropertyActionListener value="#{thread}"
+									target="#{categoryBean.selectedThread}" />
+							</p:commandLink>
+							<p:commandLink styleClass="fa fa-fw fa-paperclip"
+								title="Отметить завершенным" update="blockedPanel, threadsPanel"
+								rendered="#{thread.completed == false}"
+								actionListener="#{categoryBean.completeThread}">
+								<f:setPropertyActionListener value="#{thread}"
+									target="#{categoryBean.selectedThread}" />
+							</p:commandLink>
+						</h:form>
 					</p:column>
 					<p:column>
-						<h:outputText value="Темы:#{subcategory.approvedThreads.size()}">
-						</h:outputText>
-						<br />
-						<h:outputText value="Сообщений:#{subcategory.postsNumber}">
+						<h:outputText value="Ответов:#{thread.approvedPosts.size()}">
 						</h:outputText>
 					</p:column>
 					<p:column headerText="Последнее сообщение">
-						<h:outputText value="#{subcategory.lastPost.thread.subject}">
-						</h:outputText>
-						<br />
-						<h:outputText
-							value="#{subcategory.lastPost.created.toGMTString()} - #{subcategory.lastPost.userAccount.username}">
+						<h:outputText style="font-size:11px;"
+							value="#{thread.lastPost.created.toGMTString()} - #{thread.lastPost.userAccount.username}">
 						</h:outputText>
 					</p:column>
 				</p:dataTable>
-			</c:if>
+			</h:panelGroup>
+			<h:panelGroup id="blockedPanel"
+				rendered="#{sessionBean.loginStatus == true and (sessionBean.user.isModerator == true or sessionBean.user.isAdmin)}">
+				<p:dataTable var="thread"
+					value="#{categoryBean.currentCategory.blockedThreads}">
+					<p:column headerText="Sub">
+						<h:outputLink
+							value="#{homeBean.URLWithContextPath}/thread.xhtml?id=#{thread.id}">
+							<h:outputText value="#{thread.subject}" />
+						</h:outputLink>
+					</p:column>
+					<p:column headerText="Модерация">
+						<h:form prependId="false">
+							<p:commandLink styleClass="fa fa-fw fa-unlock-alt"
+								title="Разблокировать" update=":blockedPanel, :threadsPanel"
+								actionListener="#{categoryBean.unblockThread}">
+								<f:setPropertyActionListener value="#{thread}"
+									target="#{categoryBean.selectedThread}" />
+							</p:commandLink>
+						</h:form>
+					</p:column>
+					<p:column>
+						<h:outputText value="Ответов:#{thread.approvedPosts.size()}">
+						</h:outputText>
+					</p:column>
+					<p:column headerText="Последнее сообщение">
+						<h:outputText style="font-size:11px;"
+							value="#{thread.lastPost.created.toGMTString()} - #{thread.lastPost.userAccount.username}">
+						</h:outputText>
+					</p:column>
+				</p:dataTable>
+			</h:panelGroup>
+			<p:notificationBar position="bottom" effect="slide"
+				styleClass="bottom" widgetVar="bar" style="height:auto; padding:0;"
+				rendered="#{sessionBean.loginStatus == true}">
+				<div class="ui-g" style="height: 100%">
+					<div class="ui-g-12 ui-md-6 ui-lg-3 ui-g-nopad"
+						style="width: 100%;">
+						<div class="ui-g-11"></div>
+						<div class="ui-g-1 ui-g-nopad">
+							<p:commandButton icon="fa fa-fw fa-remove"
+								style="margin-left: 65%; margin-top:5px; border-width: 0px; 
+								background: transparent; box-shadow: none;"
+								onclick="PF('bar').hide()" />
+						</div>
+					</div>
+					<div class="ui-g-12 ui-md-6 ui-lg-3" style="width: 100%;">
+						<h:form prependId="false">
+							<p:messages />
+							<p:outputLabel value="Заголовок:   " for="@next" />
+							<p:inputText id="theader"
+								style="width:-moz-available; display:block;"
+								value="#{categoryBean.newPostHeader}" />
+							<br />
+							<p:outputLabel value="Содержимое:" for="@next" />
+							<div id="editor"></div>
+							<h:inputHidden id="editorValue"
+								value="#{categoryBean.newPostContent}" />
+							<p:commandButton value="Создать"
+								onclick="document.getElementById('editorValue').value = CKEDITOR.instances.editor.getData();CKEDITOR.instances.editor.setData();"
+								actionListener="#{categoryBean.createThread()}"
+								oncomplete="PF('bar').hide()" update=":threadsPanel" />
+						</h:form>
+						<script>
+							CKEDITOR.replace('editor');
+						</script>
+					</div>
+				</div>
+			</p:notificationBar>
 
-			<p:dataTable var="thread"
-				value="#{categoryBean.currentCategory.approvedThreads}">
-				<p:column headerText="Sub">
-					<h:outputLink
-						value="#{homeBean.URLWithContextPath}/thread.xhtml?id=#{thread.id}">
-						<h:outputText value="#{thread.subject}" />
-					</h:outputLink>
-
-				</p:column>
-				<p:column>
-					<h:outputText value="Ответов:#{thread.approvedPosts.size()}">
-					</h:outputText>
-				</p:column>
-				<p:column headerText="Последнее сообщение">
-					<h:outputText style="font-size:11px;"
-						value="#{thread.lastPost.created.toGMTString()} - #{thread.lastPost.userAccount.username}">
-					</h:outputText>
-				</p:column>
-			</p:dataTable>
 		</ui:define>
 	</ui:composition>
 </body>

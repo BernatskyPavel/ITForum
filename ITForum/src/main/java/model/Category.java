@@ -46,6 +46,13 @@ public class Category implements Serializable {
 	    ).collect(Collectors.toList());
 	}
 	
+	public List<Thread> getBlockedThreads(){
+	    return threads.stream().filter(x->
+		StatusService.Statuses.BLOCKED.getId()  == x.getStatusBean().getId().intValue() ||
+		StatusService.Statuses.WAITING.getId() == x.getStatusBean().getId().intValue()
+	    ).collect(Collectors.toList());
+	}
+	
 	public List<Category> getApprovedSubCategories(){
 	    return categories.stream().filter(x->
 		StatusService.Statuses.APPROVED.getId()  == x.getStatusBean().getId().intValue() ||

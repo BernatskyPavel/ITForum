@@ -11,6 +11,8 @@ import javax.persistence.TypedQuery;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.routines.EmailValidator;
 
+import model.Status;
+import model.Thread;
 import model.UserAccount;
 import model.UserStatus;
 
@@ -47,6 +49,7 @@ public class UserAccountService implements IService<UserAccount> {
 	query.setParameter(queryParamName, login);
 	try {
 	    user = query.getSingleResult();
+	    manager.refresh(user);
 	    System.out.println(user.getUsername());
 	} catch (Exception e) {
 	    user = null;
@@ -155,7 +158,43 @@ public class UserAccountService implements IService<UserAccount> {
 	manager.flush();
 	manager.getTransaction().commit();
     }
-
+    
+    public UserAccount changeStatus(UserAccount entity, int sid) {
+	UserStatus status = null;
+	EntityManager manager = DbManager.getManager();
+	manager.getTransaction().begin();
+	TypedQuery<UserStatus> statusQuery = manager.createNamedQuery(
+		"UserStatus.findById", UserStatus.class);
+	statusQuery.setParameter("id",
+		UserStatusService.Statuses.BLOCKED
+			.getId());
+	try {
+	    status = statusQuery.getSingleResult();
+	} catch (Exception e) {
+	    status = null;
+	}
+	if (status == null) {
+	    manager.getTransaction().rollback();
+	    manager.close();
+	    return null;
+	}
+	try {
+	    
+	    entity.getUserStatusBean().removeUserAccount(entity);
+	    entity.setUserStatusBean(status);
+	    entity.getUserStatusBean().addUserAccount(entity);
+	    manager.merge(entity);
+	    manager.flush();
+	} catch (Exception e) {
+	    e.printStackTrace();
+	    manager.getTransaction().rollback();
+	    manager.close();
+	    return null;
+	}
+	manager.getTransaction().commit();
+	manager.close();
+	return entity;
+    }
     /**
      * 
      * @param fieldValue Value of a field

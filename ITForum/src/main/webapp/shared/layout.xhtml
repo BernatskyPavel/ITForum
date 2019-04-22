@@ -85,21 +85,24 @@
 									<p:linkButton value="Кабинет" id="cabinet"
 										styleClass="ui-priority-primary"
 										rendered="#{sessionBean.loginStatus == true}"
-										href="${homeBean.URLWithContextPath}/user?id=${sessionBean.user.id}">
+										href="${homeBean.URLWithContextPath}/user.xhtml?id=${sessionBean.user.id}">
 									</p:linkButton>
 								</h:form>
 							</div>
 							<div class="ui-lg-2 ui-g-nopad" style="margin: auto;">
-								<p:commandButton value="Регистрация" id="signup" action="signup"
-									styleClass="ui-priority-primary"
-									rendered="#{sessionBean.loginStatus == false}">
-								</p:commandButton>
-								<p:commandButton value="Выход" id="logout"
-									actionListener="#{sessionBean.logout}"
-									styleClass="ui-priority-primary"
-									rendered="#{sessionBean.loginStatus == true}"
-									update=":headerPanel, :contentPanel">
-								</p:commandButton>
+								<h:form>
+									<p:commandButton value="Регистрация" id="signup"
+										action="signup" styleClass="ui-priority-primary"
+										rendered="#{sessionBean.loginStatus == false}">
+									</p:commandButton>
+									<p:commandButton value="Выход" id="logout"
+										actionListener="#{sessionBean.logout}"
+										styleClass="ui-priority-primary"
+										rendered="#{sessionBean.loginStatus == true}"
+										oncomplete="location.reload();" update=":headerPanel, :contentPanel">
+										
+									</p:commandButton>
+								</h:form>
 							</div>
 						</div>
 

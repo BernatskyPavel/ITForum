@@ -12,8 +12,7 @@
 <h:body>
 	<ui:composition template="/shared/layout.xhtml">
 		<ui:define name="links">
-			<script
-				src="${homeBean.URLWithContextPath}/resources/js/jquery-3.4.0.min.js" />
+			
 			<script src="${homeBean.URLWithContextPath}/ckeditor/ckeditor.js" />
 			<script
 				src="${homeBean.URLWithContextPath}/resources/js/runnableCode.js" />
@@ -22,7 +21,7 @@
 		</ui:define>
 		<ui:define name="content">
 			<h:form>
-				<p:poll interval="30" listener="#{threadBean.update}" update=":postsPanel, basic" ></p:poll>
+				<p:poll interval="60" listener="#{threadBean.update}" update=":postsPanel, basic" rendered="#{not threadBean.currentThread.completed}"></p:poll>
 			</h:form>
 			<p:panel id="basic" header="#{threadBean.currentThread.subject}"
 				style="margin-bottom:20px">
@@ -70,8 +69,8 @@
 
 			</p:dataList> -->
 			<h:panelGroup id="postsPanel">
-				<h:form id="form">
-					<p:dataView var="post" value="#{threadBean.approvedPosts}"
+				<h:form id="form" prependId="false">
+					<p:dataView var="post" value="#{threadBean.approvedPosts}"  id="postsData"
 						rows="10" paginator="true" rowsPerPageTemplate="5,10,15"
 						paginatorPosition="bottom"
 						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
@@ -94,6 +93,10 @@
 								</p:outputPanel>
 								<p:outputPanel>
 									<h:outputText value="#{post.contents}" escape="false" />
+									<br/>
+									<h:outputText value="#{post.created}"
+											styleClass="postUsername">
+										</h:outputText>
 								</p:outputPanel>
 
 								<!-- 							<p:commandLink update=":form:carDetail"
@@ -110,7 +113,7 @@
 				</h:form>
 			</h:panelGroup>
 			<br />
-			<h:form rendered="#{sessionBean.loginStatus == true}"
+			<h:form rendered="#{sessionBean.loginStatus == true and not threadBean.currentThread.completed}"
 				prependId="false">
 				<div id="editor"></div>
 				<h:inputHidden value="#{threadBean.postText}" id="editorValue" />
@@ -122,6 +125,8 @@
 			<script>
 				CKEDITOR.replace( 'editor');
 			</script>
+			<br/>
+			<h:outputText value="#{threadBean.approvedPosts.size()}"></h:outputText>
 		</ui:define>
 	</ui:composition>
 </h:body>

@@ -1,0 +1,401 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:o="http://omnifaces.org/ui"
+	xmlns:of="http://omnifaces.org/functions"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:c="http://java.sun.com/jstl/core">
+<h:head></h:head>
+<body onunload="refersh();">
+	<ui:composition template="/shared/layout.xhtml">
+		<ui:define name="content">
+			<style>
+.ui-tabs-panels {
+	background-color: white;
+	border-radius: 0px 0px 5px 5px;
+}
+</style>
+			<h:form>
+				<p:remoteCommand name="refersh"
+					action="#{applicationBean.refresh(view.viewId)}" />
+			</h:form>
+
+			<p:tabView cache="false" dynamic="true" style="border:0;"
+				prependId="false">
+				<p:tab
+					title="#{sessionBean.loginStatus?(userAccountBean.user.id.intValue() == sessionBean.user.id.intValue()?'О себе':'О пользователе'):'О пользователе'}">
+					<div class="ui-g">
+						<div class="ui-lg-4 ui-g-nopad" style="text-align: center;">
+							<p:graphicImage id="userlogo" style="display:inline-block;"
+								url="#{userAccountBean.logoURL}" width="240" height="240" />
+							<br />
+							<h:form enctype="multipart/form-data" prependId="false">
+								<p:fileUpload style="display:inline-block;" fileLimit="1"
+									skinSimple="true" auto="true" id="file" accept="image/*"
+									sizeLimit="2097152" update="userlogo"
+									invalidSizeMessage="Превышен допустимый размер!"
+									fileLimitMessage="Только 1 файл!"
+									fileUploadListener="#{userAccountBean.handleFileUpload}"
+									rendered="#{sessionBean.loginStatus == true and sessionBean.user.id.intValue() == userAccountBean.user.id.intValue()}"></p:fileUpload>
+								<p:commandButton title="В друзья" id="flbutton"
+									rendered="#{sessionBean.loginStatus == true and sessionBean.user.id.intValue() != userAccountBean.user.id.intValue() and not sessionBean.user.isInFriendlist(userAccountBean.user.id) and not userAccountBean.user.isInBlacklist(sessionBean.user.id) and not userAccountBean.user.blocked}"
+									actionListener="#{userAccountBean.setFriendlist}"
+									update="@form" />
+								<p:commandButton title="В ЧС" id="blbutton"
+									rendered="#{sessionBean.loginStatus == true and sessionBean.user.id.intValue() != userAccountBean.user.id.intValue() and not sessionBean.user.isInBlacklist(userAccountBean.user.id)}"
+									actionListener="#{userAccountBean.setBlacklist}" update="@form" />
+								<p:commandButton title="Заблокировать" id="mblockbutton"
+									rendered="#{sessionBean.loginStatus == true and sessionBean.user.id.intValue() != userAccountBean.user.id.intValue() and sessionBean.user.isModerator and not userAccountBean.user.isModerator and not userAccountBean.user.isAdmin and not userAccountBean.user.blocked}"
+									actionListener="#{userAccountBean.blockUser}" update="@form" />
+								<p:commandButton title="Заблокировать" id="ablockbutton"
+									rendered="#{sessionBean.loginStatus == true and sessionBean.user.id.intValue() != userAccountBean.user.id.intValue() and sessionBean.user.isAdmin and not userAccountBean.user.isAdmin and not userAccountBean.user.blocked}"
+									actionListener="#{userAccountBean.blockUser}" update="@form" />
+							</h:form>
+						</div>
+						<div class="ui-lg-8 ui-g-nopad">
+							<p:growl id="msgs" showDetail="true" />
+							<p:panelGrid columns="1" id="userinfo" columnClasses="label"
+								layout="grid"
+								rendered="#{sessionBean.loginStatus == false or (sessionBean.loginStatus == true and sessionBean.user.id.intValue() != userAccountBean.user.id.intValue())}">
+								<p:panel rendered="#{not empty userAccountBean.user.firstName}">
+									<h:outputText value="Имя : " />
+									<h:outputText value="#{userAccountBean.user.firstName}" />
+								</p:panel>
+
+								<p:panel rendered="#{not empty userAccountBean.user.lastName}">
+									<h:outputText value="Фамилия : " />
+									<h:outputText value="#{userAccountBean.user.lastName}" />
+								</p:panel>
+
+								<p:panel rendered="#{not empty userAccountBean.user.middleName}">
+									<h:outputText value="Отчество : " />
+									<h:outputText value="#{userAccountBean.user.middleName}" />
+								</p:panel>
+								<p:panel rendered="#{not empty userAccountBean.user.birthday}">
+									<h:outputText value="Дата рождения : " />
+									<h:outputText
+										value="#{of:formatDate(userAccountBean.user.birthday, 'MM/dd/yyyy')}" />
+								</p:panel>
+								<p:panel rendered="#{not empty userAccountBean.user.gender}">
+									<h:outputText value="Пол : " />
+									<h:outputText value="#{userAccountBean.user.genderString}" />
+								</p:panel>
+								<p:panel rendered="#{not empty userAccountBean.user.adress}">
+									<h:outputText value="Адрес: " />
+									<h:outputText value="#{userAccountBean.user.adress}" />
+								</p:panel>
+								<p:panel rendered="#{not empty userAccountBean.user.about}">
+									<h:outputText value="О себе: " />
+									<h:outputText value="#{userAccountBean.user.about}" />
+								</p:panel>
+							</p:panelGrid>
+							<p:panelGrid columns="1" id="selfinfo"
+								columnClasses="label, value" layout="grid"
+								rendered="#{sessionBean.loginStatus == true and sessionBean.user.id.intValue() == userAccountBean.user.id.intValue()}">
+								<h:form>
+									<p:panel rendered="#{not empty userAccountBean.user.firstName}">
+										<h:outputText value="Имя : " />
+										<p:inplace event="dblclick" editor="true">
+											<p:ajax event="save"
+												listener="#{userAccountBean.updateHandle}" update="msgs"></p:ajax>
+											<f:facet name="output">
+												<h:outputText
+													value="#{empty userAccountBean.user.firstName?'Введите имя':userAccountBean.user.firstName}" />
+											</f:facet>
+											<f:facet name="input">
+												<p:inputText value="#{userAccountBean.user.firstName}"
+													maxlength="100" />
+											</f:facet>
+										</p:inplace>
+									</p:panel>
+
+									<p:panel>
+										<h:outputText value="Фамилия : " />
+										<p:inplace event="dblclick" editor="true">
+											<p:ajax event="save"
+												listener="#{userAccountBean.updateHandle}" update="msgs"></p:ajax>
+											<f:facet name="output">
+												<h:outputText
+													value="#{empty userAccountBean.user.lastName?'Введите фамилию':userAccountBean.user.lastName}" />
+											</f:facet>
+											<f:facet name="input">
+												<p:inputText value="#{userAccountBean.user.lastName}"
+													maxlength="100" />
+											</f:facet>
+										</p:inplace>
+									</p:panel>
+
+									<p:panel>
+										<h:outputText value="Отчество : " />
+										<p:inplace event="dblclick" editor="true">
+											<p:ajax event="save"
+												listener="#{userAccountBean.updateHandle}" update="msgs"></p:ajax>
+											<f:facet name="output">
+												<h:outputText
+													value="#{empty userAccountBean.user.middleName?'Введите отчество':userAccountBean.user.middleName}" />
+											</f:facet>
+											<f:facet name="input">
+												<p:inputText value="#{userAccountBean.user.middleName}"
+													maxlength="100" />
+											</f:facet>
+										</p:inplace>
+									</p:panel>
+									<p:panel>
+										<h:outputText value="Дата рождения : " />
+										<p:inplace event="dblclick" editor="true">
+											<p:ajax event="save"
+												listener="#{userAccountBean.updateHandle}" update="msgs"></p:ajax>
+											<f:facet name="output">
+												<h:outputText
+													value="#{empty userAccountBean.user.birthdayAsDate?'Выберите дату': (of:formatDate(userAccountBean.user.birthdayAsDate, 'MM/dd/yyyy'))}" />
+											</f:facet>
+											<f:facet name="input">
+												<p:calendar value="#{userAccountBean.user.birthdayAsDate}"
+													pattern="MM/dd/yyyy" mask="true" yearRange="c-100:c+10"
+													navigator="true" readonlyInput="true" />
+											</f:facet>
+										</p:inplace>
+									</p:panel>
+									<p:panel>
+										<h:outputText value="Пол : " />
+										<p:inplace event="dblclick" editor="true">
+											<p:ajax event="save"
+												listener="#{userAccountBean.updateHandle}" update="msgs"></p:ajax>
+											<f:facet name="output">
+												<h:outputText value="#{userAccountBean.user.genderString}" />
+											</f:facet>
+											<f:facet name="input">
+												<p:selectOneMenu value="#{userAccountBean.user.gender}"
+													style="width:125px">
+													<f:selectItem itemLabel="Выберите пол" itemValue="" />
+													<f:selectItem itemLabel="Мужской" itemValue="M" />
+													<f:selectItem itemLabel="Женский" itemValue="F" />
+													<f:selectItem itemLabel="Другой" itemValue="O" />
+												</p:selectOneMenu>
+											</f:facet>
+										</p:inplace>
+									</p:panel>
+									<p:panel>
+										<h:outputText value="Адрес: " />
+										<p:inplace event="dblclick" editor="true">
+											<p:ajax event="save"
+												listener="#{userAccountBean.updateHandle}" update="msgs"></p:ajax>
+											<f:facet name="output">
+												<h:outputText
+													value="#{empty userAccountBean.user.adress?'Введите адрес':userAccountBean.user.adress}" />
+											</f:facet>
+											<f:facet name="input">
+												<p:inputText value="#{userAccountBean.user.adress}"
+													maxlength="500" />
+											</f:facet>
+										</p:inplace>
+									</p:panel>
+									<p:panel>
+										<h:outputText value="О себе: " />
+										<p:inplace event="dblclick" editor="true">
+											<p:ajax event="save"
+												listener="#{userAccountBean.updateHandle}" update="msgs"></p:ajax>
+											<f:facet name="output">
+												<h:outputText escape="false"
+													value="#{empty userAccountBean.user.about?'Расскажите о себе':userAccountBean.user.about}" />
+											</f:facet>
+											<f:facet name="input">
+												<p:textEditor allowFormatting="true" allowLinks="true"
+													allowStyles="true" value="#{userAccountBean.user.about}"
+													maxlength="2000" />
+											</f:facet>
+										</p:inplace>
+									</p:panel>
+								</h:form>
+							</p:panelGrid>
+						</div>
+					</div>
+				</p:tab>
+				<p:tab title="Почта"
+					rendered="#{sessionBean.loginStatus == true and sessionBean.user.id.intValue() == userAccountBean.user.id.intValue()}">
+					<p:tabView orientation="left" prependId="false">
+						<h:form prependId="false">
+							<p:growl id="emsgs" showDetail="true" />
+						</h:form>
+						<p:ajax event="tabChange" update="showEmail, showOEmail"
+							listener="#{userAccountBean.setSelectedEmail(null)}" />
+						<p:tab title="Входящие" style="padding:0;margin:0;">
+							<h:form prependId="false">
+								<p:poll update="inboxList" interval="60"
+									listener="#{userAccountBean.update}" />
+								<div class="ui-g">
+									<div class="ui-lg-4 ui-g-nopad">
+										<p:dataList id="inboxList" emptyMessage="Пусто" lazy="true"
+											paginatorAlwaysVisible="false" paginatorPosition="bottom"
+											paginator="true" rows="20"
+											value="#{userAccountBean.user.emails2}" var="inbox"
+											itemType="none">
+											<p:commandLink styleClass="fa fa-fw fa-search"
+												title="View Detail" update="showEmail">
+												<f:setPropertyActionListener value="#{inbox}"
+													target="#{userAccountBean.selectedEmail}" />
+											</p:commandLink>
+											<h:outputText value="#{inbox.header}" />
+
+										</p:dataList>
+									</div>
+									<div class="ui-lg-8 ui-g-nopad">
+										<h:panelGroup id="showEmail">
+											<p:panel
+												rendered="#{not empty userAccountBean.selectedEmail}">
+												<div class="ui-g">
+													<div class="ui-lg-12 ui-g-nopad">
+														<h:outputText
+															value="Тема: #{userAccountBean.selectedEmail.header}" />
+													</div>
+													<div class="ui-lg-12 ui-g-nopad">
+														<h:outputText
+															value="От: #{userAccountBean.selectedEmail.userAccount1.username}" />
+													</div>
+													<div class="ui-lg-12 ui-g-nopad">
+														<h:outputText
+															value="Кому: #{userAccountBean.selectedEmail.userAccount2.username}" />
+													</div>
+													<div class="ui-lg-12 ui-g-nopad">
+														<h:outputText
+															value="Сообщение: #{userAccountBean.selectedEmail.text}"
+															escape="false" />
+													</div>
+													<div class="ui-lg-12 ui-g-nopad">
+														<h:outputText
+															value="Отправлено: #{userAccountBean.selectedEmail.sended}" />
+													</div>
+												</div>
+											</p:panel>
+										</h:panelGroup>
+									</div>
+								</div>
+							</h:form>
+						</p:tab>
+						<p:tab title="Исходящие">
+							<h:form prependId="false">
+
+								<div class="ui-g">
+									<div class="ui-lg-4 ui-g-nopad">
+										<p:dataList emptyMessage="Пусто" lazy="true" id="outboxList"
+											paginatorAlwaysVisible="false" paginatorPosition="bottom"
+											paginator="true" rows="20"
+											value="#{userAccountBean.user.emails1}" var="inbox"
+											itemType="none">
+											<p:commandLink styleClass="fa fa-fw fa-search"
+												title="View Detail" update="showOEmail">
+												<f:setPropertyActionListener value="#{inbox}"
+													target="#{userAccountBean.selectedEmail}" />
+											</p:commandLink>
+											<h:outputText value="#{inbox.header}" />
+
+										</p:dataList>
+									</div>
+									<div class="ui-lg-8 ui-g-nopad">
+										<h:panelGroup id="showOEmail">
+											<p:panel
+												rendered="#{not empty userAccountBean.selectedEmail}">
+												<div class="ui-g">
+													<div class="ui-lg-12 ui-g-nopad">
+														<h:outputText
+															value="Тема: #{userAccountBean.selectedEmail.header}" />
+													</div>
+													<div class="ui-lg-12 ui-g-nopad">
+														<h:outputText
+															value="От: #{userAccountBean.selectedEmail.userAccount1.username}" />
+													</div>
+													<div class="ui-lg-12 ui-g-nopad">
+														<h:outputText
+															value="Кому: #{userAccountBean.selectedEmail.userAccount2.username}" />
+													</div>
+													<div class="ui-lg-12 ui-g-nopad">
+														<h:outputText
+															value="Сообщение: #{userAccountBean.selectedEmail.text}"
+															escape="false" />
+													</div>
+													<div class="ui-lg-12 ui-g-nopad">
+														<h:outputText
+															value="Отправлено: #{userAccountBean.selectedEmail.sended}" />
+													</div>
+												</div>
+											</p:panel>
+										</h:panelGroup>
+									</div>
+								</div>
+							</h:form>
+						</p:tab>
+						<p:tab title="Отправить">
+							<h:form prependId="false">
+								<p:panel id="sendEmail">
+									<p:panelGrid columns="2" columnClasses="label, value">
+
+										<h:outputLabel value="Кому: " />
+										<p:autoComplete value="#{userAccountBean.destLogin}"
+											required="true"
+											completeMethod="#{userAccountBean.friendComplete}">
+										</p:autoComplete>
+
+										<h:outputLabel value="Тема: " for="@next" />
+										<p:inputText value="#{userAccountBean.newEmail.header}"></p:inputText>
+
+										<h:outputLabel value="Текст: " for="@next" />
+										<p:textEditor allowLinks="true" allowFormatting="true"
+											value="#{userAccountBean.newEmail.text}"></p:textEditor>
+
+										<p:commandButton actionListener="#{userAccountBean.sendEmail}"
+											title="Отправить"
+											update="outboxList, inboxList, sendEmail, emsgs, msgs"></p:commandButton>
+
+									</p:panelGrid>
+								</p:panel>
+							</h:form>
+						</p:tab>
+					</p:tabView>
+				</p:tab>
+				<p:tab title="Списки"
+					rendered="#{sessionBean.loginStatus == true and sessionBean.user.id.intValue() == userAccountBean.user.id.intValue()}">
+					<h:form prependId="false">
+						<p:poll listener="#{userAccountBean.updateLists}"
+							update="friendList, blackList" interval="90" />
+						<div class="ui-g">
+							<div class="ui-lg-6 ui-g-nopad">
+								<p:dataList emptyMessage="Пусто" lazy="true" id="friendList"
+									paginatorAlwaysVisible="false" paginatorPosition="bottom"
+									paginator="true" rows="20"
+									value="#{userAccountBean.user.friendlists2}" var="friend"
+									itemType="none">
+									<f:facet name="header">Список друзей
+									</f:facet>
+									<p:link outcome="user" value="#{friend.userAccount1.username}">
+										<f:param name="id"
+											value="#{friend.userAccount1.id.intValue()}" />
+									</p:link>
+
+								</p:dataList>
+							</div>
+							<div class="ui-lg-6 ui-g-nopad">
+								<p:dataList emptyMessage="Пусто" lazy="true" id="blackList"
+									paginatorAlwaysVisible="false" paginatorPosition="bottom"
+									paginator="true" rows="20"
+									value="#{userAccountBean.user.blacklists2}" var="black"
+									itemType="none">
+									<f:facet name="header">Черный список
+									</f:facet>
+									<p:link outcome="user" value="#{black.userAccount1.username}">
+										<f:param name="id" value="#{black.userAccount1.id.intValue()}" />
+									</p:link>
+								</p:dataList>
+							</div>
+						</div>
+					</h:form>
+				</p:tab>
+			</p:tabView>
+		</ui:define>
+	</ui:composition>
+</body>
+</html>

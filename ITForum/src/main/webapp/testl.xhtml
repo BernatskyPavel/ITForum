@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:o="http://omnifaces.org/ui"
+	xmlns:of="http://omnifaces.org/functions"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+
+<h:head>
+	<script src="${homeBean.URLWithContextPath}/ckeditor/ckeditor.js" />
+	<script
+		src="${homeBean.URLWithContextPath}/resources/js/runnableCode.js" />
+</h:head>
+<body style="margin: 0; padding: 0;">
+
+	<p:notificationBar position="bottom" effect="slide" styleClass="bottom"
+		widgetVar="bar" style="height:auto; padding:0;">
+		<div class="ui-g" style="height: 100%">
+			<div class="ui-g-12 ui-md-6 ui-lg-3 ui-g-nopad" style="width: 100%;">
+				<div class="ui-g-11"></div>
+				<div class="ui-g-1 ui-g-nopad">
+					<p:commandButton icon="fa fa-fw fa-remove"
+						style="margin-left: 65%; margin-top:5px; border-width: 0px; 
+						background: transparent; box-shadow: none;"
+						onclick="PF('bar').hide()" />
+				</div>
+			</div>
+			<div class="ui-g-12 ui-md-6 ui-lg-3" style="width: 100%;">
+				<h:form prependId="false">
+					<p:outputLabel value="Заголовок:   " for="@next" />
+					<p:inputText id="header"
+						style="width:-moz-available; display:block;" />
+					<br />
+					<p:outputLabel value="Содержимое:" for="@next" />
+					<div id="editor"></div>
+					<h:inputHidden />
+					<p:commandButton value="Button" />
+				</h:form>
+				<script>
+				CKEDITOR.replace('editor');
+			</script>
+			</div>
+		</div>
+	</p:notificationBar>
+	<button onclick="PF('bar').show()" title="SHOW"></button>
+</body>
+</html>

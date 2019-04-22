@@ -33,23 +33,30 @@ public class PostService implements IService<Post> {
 	Status status = null;
 	EntityManager manager = DbManager.getManager();
 	manager.getTransaction().begin();
-	
-	status = statusService.getById(StatusService.Statuses.APPROVED.getId());
-	
+
+	status = statusService
+		.getById(StatusService.Statuses.APPROVED.getId());
+
 	if (status == null) {
 	    manager.getTransaction().rollback();
 	    manager.close();
 	    return null;
 	}
-	
+
 	status.addPost(entity);
 	entity.setStatusBean(status);
-	entity.getThread().addPost(entity);
-	entity.getUserAccount().addPost(entity);	
-	//entity.setThread(thread);
-	
+
+	// entity.setThread(thread);
+
 	try {
 	    manager.persist(entity);
+	    manager.flush();
+	    manager.refresh(entity);
+	    entity.getThread().addPost(entity);
+	    entity.getUserAccount().addPost(entity);
+	    manager.merge(entity.getThread());
+	    manager.merge(entity.getStatusBean());
+	    manager.merge(entity.getUserAccount());
 	} catch (Exception e) {
 	    e.printStackTrace();
 	    manager.getTransaction().rollback();
@@ -71,6 +78,6 @@ public class PostService implements IService<Post> {
     @Override
     public void deleteById(Object Id) {
 	// TODO Auto-generated method stub
-	
+
     }
 }
