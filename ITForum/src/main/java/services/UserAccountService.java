@@ -11,8 +11,6 @@ import javax.persistence.TypedQuery;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.routines.EmailValidator;
 
-import model.Status;
-import model.Thread;
 import model.UserAccount;
 import model.UserStatus;
 

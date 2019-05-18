@@ -9,7 +9,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import model.Friendlist;
-import model.Status;
 
 @ApplicationScoped
 public class FriendlistService
