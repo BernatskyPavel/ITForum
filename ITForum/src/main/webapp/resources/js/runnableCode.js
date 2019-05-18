@@ -1,23 +1,28 @@
 /**
  * 
  */
-function runCode(event){
-		var parent = event.parentElement;
-		var childs = parent.children;
-		var to_compile = {
-		    "LanguageChoice": childs[1].value,
-		    "Program": childs[0].value,
-		    "Input": "",
-		    "CompilerArgs" : ""
-	    };
+function runCode(event) {
+	var parent = event.parentElement;
+	var childs = parent.children;
+	var code_child = childs[0].children;
+	var to_compile = {
+		"LanguageChoice": childs[1].value,
+		"Program": code_child[0].innerText,
+		"Input": "",
+		"CompilerArgs": ""
+	};
 
-	    $.ajax ({
-		        url: "https://rextester.com/rundotnet/api",
-		        type: "POST",
-		        data: to_compile
-		    }).done(function(data) {
-		        alert(data.Result);
-		    }).fail(function(data, err) {
-		        alert("fail " + JSON.stringify(data) + " " + JSON.stringify(err));
-	        });
-    }
+	$.ajax({
+		url: "https://rextester.com/rundotnet/api",
+		type: "POST",
+		data: to_compile
+	}).done(function (data) {
+		if (data.Result)
+			childs[3].innerText = data.Result;
+		else {
+			childs[3].innerText = data.Errors;
+		}
+	}).fail(function (data, err) {
+		alert("fail " + JSON.stringify(data) + " " + JSON.stringify(err));
+	});
+}

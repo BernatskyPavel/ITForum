@@ -1,0 +1,17 @@
+@charset "UTF-8";
+
+th, tr{
+	background:none !important;
+}
+th{
+	border:none !important;
+}
+td{
+	border: 2px solid rgba(128, 255, 128, 0.5) !important;
+	color: rgba(128, 255, 128, 0.8) !important
+}
+
+body a:hover{
+	text-decoration: none;
+	color: rgba(128, 255, 128, 0.8) !important;
+}

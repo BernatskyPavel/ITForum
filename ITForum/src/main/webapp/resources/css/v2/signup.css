@@ -1,0 +1,15 @@
+@charset "UTF-8";
+
+#signupwizard>ul>li, #signupwizard_next, #signupwizard_back, #file>div,
+	#file>div>span, #submitsignup {
+	background: none;
+	border: none;
+}
+
+#account-panel_content, #account-panel_header, #personal-panel_content,
+	#personal-panel_header, #avatar-panel_content, #avatar-panel_header,
+	#confirm-panel_content, #confirm-panel_header {
+	background: rgba(51, 255, 51, 0.2);
+	border: none;
+	color: rgba(128, 255, 128, 0.8);
+}

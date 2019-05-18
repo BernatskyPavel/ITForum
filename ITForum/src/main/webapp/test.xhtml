@@ -4,7 +4,7 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:p="http://primefaces.org/ui" 
+	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions"
 	xmlns:o="http://omnifaces.org/ui"
 	xmlns:of="http://omnifaces.org/functions"
@@ -13,58 +13,22 @@
 
 
 <h:head>
-	<script src="./resources/js/jquery-3.4.0.min.js"></script>	
+	<script src="./resources/js/jquery-3.4.0.min.js"></script>
 </h:head>
-<body>
-	<!-- 	<iframe src="http://localhost:8080/ITForum-0.0.1-SNAPSHOT/resources/other/test.pps" style="width:600px; height:500px;" frameborder="0"></iframe> -->
-	<!-- 	<iframe src='https://view.officeapps.live.com/op/embed.aspx?src=http://localhost:8080/ITForum-0.0.1-SNAPSHOT/resources/other/test.pptx' width='100%' height='600px' frameborder='0'/> -->
-	<br />
-	<h:form prependId="false">
-		<p:textEditor widgetVar="editor" value="#{testBean.postText}"
-			height="300" styleClass="post-editor" allowBlocks="true"
-			allowImages="true" allowLinks="true" allowStyles="true" id="editor">
-			<f:facet name="toolbar">
-				<span class="ql-formats">
-					<button class="ql-bold" />
-					<button class="ql-italic" />
-					<button class="ql-underline" />
-					<button class="ql-strike" />
-				</span>
-				<span class="ql-formats"> <select class="ql-font" /> <select
-					class="ql-size" />
-				</span>
-				<span class="ql-formats">
-					<button class="ql-image" />
-					<button class="ql-video" /> <p:commandButton
-						onclick="pptconvert()" icon="fa fa-fw fa-file-powerpoint-o"
-						type="button" update="editor" />
-				</span>
-			</f:facet>
-		</p:textEditor>
-
-		<p:remoteCommand name="rc" update="msgs"
-			action="#{testBean.showMessage}" />
-
-		<br/>
-		<pe:ckEditor id="ckeditor" ></pe:ckEditor>
-		<p:growl id="msgs" showDetail="true" />
-		<p:commandButton type="button" onclick="rc()" value="Execute"
-			icon="fa fa-fw fa-edit" />
-
-		<a4j:jsFunction name="pptconvert" action="#{testAjaxBean.ajaxAction}"
-			data="#{testAjaxBean}" oncomplete="testUpload(event.data)"
-			immediate="true" render="editor">
-		</a4j:jsFunction>
-		
-		<br/>
-		<p:button href="./code"></p:button>
-	</h:form>
-	<script>
-	function testUpload(data){
-		//var file = $('.rf-fu-inp')[0].files[0];
-		var editor = document.querySelector('#editor_editor')
-	    editor.__quill.updateContents(editor.__quill.insertEmbed(0, 'html', data.result));
-	}
-	</script>
-</body>
+<h:body>
+	<ui:composition template="/shared/layout.xhtml">
+		<ui:define name="content">
+			<p:breadCrumb>
+				<p:menuitem value="Categories" url="#" />
+				<p:menuitem value="Sports" url="#" />
+				<p:menuitem value="Basketball" url="#" />
+				<p:menuitem value="NBA" url="#" />
+				<p:menuitem value="Teams" url="#" />
+				<p:menuitem value="L.A. Lakers" url="#" />
+				<p:menuitem value="Roster" url="#" />
+				<p:menuitem value="Kobe Bryant" url="#" />
+			</p:breadCrumb>
+		</ui:define>
+	</ui:composition>
+</h:body>
 </html>

@@ -1,0 +1,178 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:scriptfree="http://jakarta.apache.org/taglibs/standard/scriptfree"
+	xmlns:permittedTaglibs="http://jakarta.apache.org/taglibs/standard/permittedTaglibs"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head></h:head>
+<body>
+	<ui:composition template="/shared/layout-v2.xhtml">
+		<ui:define name="links">
+			<script src="${homeBean.URLWithContextPath}/ckeditor/ckeditor.js" />
+			<link
+				href="${homeBean.URLWithContextPath}/resources/css/v2/category.css"
+				rel="stylesheet" type="text/css" />
+		</ui:define>
+		<ui:define name="content">
+			<h:form prependId="false">
+				<p:poll interval="60" update="threadsPanel"
+					listener="#{categoryBean.refresh}"></p:poll>
+			</h:form>
+			<h:panelGroup style="margin-bottom: 30px;display: block;">
+				<p:breadCrumb model="#{categoryBean.breadcrumbs}" id="breadcrumb">
+				</p:breadCrumb>
+				<p:outputLabel value="#{categoryBean.currentCategory.description}"></p:outputLabel>
+			</h:panelGroup>
+			<h:panelGroup id="categoriesPanel" style="margin-bottom:30px;">
+				<c:if test="#{not empty categoryBean.approvedSubCategories}">
+					<p:dataTable var="subcategory"
+						value="#{categoryBean.approvedSubCategories}"
+						style="margin-bottom:20px;">
+						<p:column headerText="Разделы">
+							<h:outputLink
+								value="#{homeBean.URLWithContextPath}/v2/category.xhtml?id=#{subcategory.id}">
+								<h:outputText value="#{subcategory.name}">
+								</h:outputText>
+							</h:outputLink>
+
+						</p:column>
+						<p:column>
+							<h:outputText value="Темы:#{subcategory.approvedThreads.size()}">
+							</h:outputText>
+							<br />
+							<h:outputText value="Сообщений:#{subcategory.postsNumber}">
+							</h:outputText>
+						</p:column>
+						<p:column headerText="Последнее сообщение">
+							<h:outputText value="#{subcategory.lastPost.thread.subject}">
+							</h:outputText>
+							<br />
+							<h:outputText
+								value="#{subcategory.lastPost.created.toGMTString()} - #{subcategory.lastPost.userAccount.username}">
+							</h:outputText>
+						</p:column>
+					</p:dataTable>
+				</c:if>
+			</h:panelGroup>
+			<h:panelGroup id="threadsPanel">
+				<p:dataTable var="thread"
+					value="#{categoryBean.currentCategory.approvedThreads}">
+					<f:facet name="header">
+						<p:commandButton icon="fa fa-plus" value="Создать"
+							onclick="PF('bar').show()" id="createThreadButton"
+							rendered="#{sessionBean.loginStatus == true}" />
+					</f:facet>
+					<p:column headerText="Sub">
+						<h:outputLink
+							value="#{homeBean.URLWithContextPath}/v2/thread.xhtml?id=#{thread.id}">
+							<h:outputText value="#{thread.subject}" />
+						</h:outputLink>
+					</p:column>
+					<p:column headerText="Модерация"
+						rendered="#{sessionBean.loginStatus == true and (sessionBean.user.isModerator == true or sessionBean.user.isAdmin)}">
+						<h:form prependId="false">
+							<p:commandLink styleClass="pi pi-ban" title="Заблокировать"
+								actionListener="#{categoryBean.blockThread}"
+								update=":blockedPanel, :threadsPanel">
+								<f:setPropertyActionListener value="#{thread}"
+									target="#{categoryBean.selectedThread}" />
+							</p:commandLink>
+							<p:commandLink styleClass="pi pi-paperclip"
+								title="Отметить завершенным" update="blockedPanel, threadsPanel"
+								rendered="#{thread.completed == false}"
+								actionListener="#{categoryBean.completeThread}">
+								<f:setPropertyActionListener value="#{thread}"
+									target="#{categoryBean.selectedThread}" />
+							</p:commandLink>
+						</h:form>
+					</p:column>
+					<p:column>
+						<h:outputText value="Ответов:#{thread.approvedPosts.size()}">
+						</h:outputText>
+					</p:column>
+					<p:column headerText="Последнее сообщение">
+						<h:outputText style="font-size:11px;"
+							value="#{thread.lastPost.created.toGMTString()} - #{thread.lastPost.userAccount.username}">
+						</h:outputText>
+					</p:column>
+				</p:dataTable>
+			</h:panelGroup>
+			<h:panelGroup id="blockedPanel"
+				rendered="#{sessionBean.loginStatus == true and (sessionBean.user.isModerator == true or sessionBean.user.isAdmin)}">
+				<p:dataTable var="thread"
+					value="#{categoryBean.currentCategory.blockedThreads}">
+					<p:column headerText="Sub">
+						<h:outputLink
+							value="#{homeBean.URLWithContextPath}/v2/thread.xhtml?id=#{thread.id}">
+							<h:outputText value="#{thread.subject}" />
+						</h:outputLink>
+					</p:column>
+					<p:column headerText="Модерация">
+						<h:form prependId="false">
+							<p:commandLink styleClass="pi pi-unlock" title="Разблокировать"
+								update=":blockedPanel, :threadsPanel"
+								actionListener="#{categoryBean.unblockThread}">
+								<f:setPropertyActionListener value="#{thread}"
+									target="#{categoryBean.selectedThread}" />
+							</p:commandLink>
+						</h:form>
+					</p:column>
+					<p:column>
+						<h:outputText value="Ответов:#{thread.approvedPosts.size()}">
+						</h:outputText>
+					</p:column>
+					<p:column headerText="Последнее сообщение">
+						<h:outputText style="font-size:11px;"
+							value="#{thread.lastPost.created.toGMTString()} - #{thread.lastPost.userAccount.username}">
+						</h:outputText>
+					</p:column>
+				</p:dataTable>
+			</h:panelGroup>
+			<p:notificationBar position="bottom" effect="slide"
+				styleClass="bottom" widgetVar="bar" style="height:auto; padding:0;"
+				rendered="#{sessionBean.loginStatus == true}">
+				<div class="ui-g" style="height: 100%">
+					<div class="ui-g-12 ui-md-6 ui-lg-3 ui-g-nopad"
+						style="width: 100%; background: -webkit-linear-gradient(left, #08216b, #a5cef7); height: 30px;">
+						<div class="ui-g-11"></div>
+						<div class="ui-g-1 ui-g-nopad">
+							<p:commandButton icon="fa fa-fw fa-remove"
+								style="margin-left: 65%; border-width: 0px; 
+								background: transparent; box-shadow: none;"
+								onclick="PF('bar').hide()" />
+						</div>
+					</div>
+					<div class="ui-g-12 ui-md-6 ui-lg-3" style="width: 100%;">
+						<h:form prependId="false">
+							<p:messages />
+							<p:outputLabel value="Заголовок:   " for="@next"
+								style="color: black;text-shadow: none;" />
+							<p:inputText id="theader"
+								style="width:-moz-available; display:block;"
+								value="#{categoryBean.newPostHeader}" />
+							<br />
+							<p:outputLabel value="Содержимое:" for="@next"
+								style="color: black;text-shadow: none;" />
+							<div id="editor"></div>
+							<h:inputHidden id="editorValue"
+								value="#{categoryBean.newPostContent}" />
+							<p:commandButton value="Создать" id="submitThread"
+								onclick="document.getElementById('editorValue').value = CKEDITOR.instances.editor.getData();CKEDITOR.instances.editor.setData();"
+								actionListener="#{categoryBean.createThread()}"
+								oncomplete="PF('bar').hide()" update=":threadsPanel" />
+						</h:form>
+						<script>
+							CKEDITOR.replace('editor');
+						</script>
+					</div>
+				</div>
+			</p:notificationBar>
+
+		</ui:define>
+	</ui:composition>
+</body>
+</html>

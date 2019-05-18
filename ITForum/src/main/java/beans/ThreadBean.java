@@ -18,6 +18,7 @@ import javax.validation.constraints.Size;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 import org.primefaces.PrimeFaces;
+import org.primefaces.model.menu.MenuModel;
 
 import model.Post;
 import model.Thread;
@@ -53,6 +54,8 @@ public class ThreadBean implements Serializable {
 
     private String lastUpdateHash;
 
+    private MenuModel breadcrumbs;
+    
     @PostConstruct
     public void init() {
 	HttpServletRequest request = (HttpServletRequest) FacesContext
@@ -65,6 +68,7 @@ public class ThreadBean implements Serializable {
 		Integer.parseInt(request.getParameter("id")));
 	this.approvedPosts = this.currentThread.getApprovedPosts();
 	this.lastUpdateHash = UpdateHistoryService.getStarthash();
+	this.setBreadcrumbs(applicationService.getBreadcrumbPath(this.currentThread));
     }
 
     public void createPost() {
@@ -161,5 +165,19 @@ public class ThreadBean implements Serializable {
      */
     public void setPostText(String postText) {
 	this.postText = postText;
+    }
+
+    /**
+     * @return the breadcrumbs
+     */
+    public MenuModel getBreadcrumbs() {
+	return breadcrumbs;
+    }
+
+    /**
+     * @param breadcrumbs the breadcrumbs to set
+     */
+    public void setBreadcrumbs(MenuModel breadcrumbs) {
+	this.breadcrumbs = breadcrumbs;
     }
 }

@@ -2,17 +2,25 @@ package services;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Stack;
 import java.util.regex.Pattern;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
+
+import org.omnifaces.util.Faces;
+import org.primefaces.model.menu.DefaultMenuItem;
+import org.primefaces.model.menu.DefaultMenuModel;
+import org.primefaces.model.menu.MenuModel;
+
+import model.Category;
+import model.Thread;
 
 @ApplicationScoped
 public class ApplicationService implements Serializable {
@@ -21,7 +29,7 @@ public class ApplicationService implements Serializable {
      * 
      */
     private static final long serialVersionUID = -8940023800682087943L;
-    private final String CENSOREDFILEPATH = "C:\\Users\\UnknowNPC\\Desktop\\censored.txt";
+    private final String CENSOREDFILEPATH = Faces.getRealPath("/") + "/resources/Censored.txt";
     private final String[] EMPTY_ARRAY = new String[0];
     private String[] censoredWords;
     private List<String> censoredList;
@@ -60,4 +68,88 @@ public class ApplicationService implements Serializable {
 	return text;
     }
 
+    
+    public MenuModel getBreadcrumbPath(Category category) {
+	MenuModel result = new DefaultMenuModel();
+	Stack<DefaultMenuItem> tempstack = new Stack<DefaultMenuItem>();
+	DefaultMenuItem item;
+	Category testcat = category;
+	if (null != testcat) {
+	    item = new DefaultMenuItem();
+	    item.setUrl(Faces.getRequestBaseURL()
+		    + "v2/category.xhtml?id="
+		    + testcat.getId().intValue());
+	    item.setValue(testcat.getName());
+	    item.setTitle(testcat.getName());
+	    tempstack.push(item);
+	    while (testcat.getCategory() != null) {
+		testcat = testcat.getCategory();
+		item = new DefaultMenuItem();
+		item.setUrl(Faces.getRequestBaseURL()
+			+ "v2/category.xhtml?id="
+			+ testcat.getId().intValue());
+		item.setValue(testcat.getName().length() > 20
+			? testcat.getName().substring(0, 20) + "..."
+			: testcat.getName());
+		item.setTitle(testcat.getName());
+		tempstack.push(item);
+	    }
+	    item = new DefaultMenuItem();
+	    item.setUrl(Faces.getRequestBaseURL() + "v2/");
+	    item.setValue("Главная");
+	    item.setTitle("Главная");
+	    result.addElement(item);
+	    while (!tempstack.isEmpty())
+		result.addElement(tempstack.pop());
+
+	}
+	return result;
+    }
+
+    public MenuModel getBreadcrumbPath(Thread thread) {
+	MenuModel result = new DefaultMenuModel();
+	Stack<DefaultMenuItem> tempstack = new Stack<DefaultMenuItem>();
+	DefaultMenuItem item;
+	item = new DefaultMenuItem();
+	item.setUrl(Faces.getRequestBaseURL() + "v2/thread.xhtml?id="
+		+ thread.getId().intValue());
+	item.setValue(thread.getSubject().length() > 20
+		? thread.getSubject().substring(0, 20) + "..."
+		: thread.getSubject());
+	item.setTitle(thread.getSubject());
+	tempstack.push(item);
+	Category testcat = thread.getCategoryBean();
+	if (null != testcat) {
+	    item = new DefaultMenuItem();
+	    item.setUrl(Faces.getRequestBaseURL()
+		    + "v2/category.xhtml?id="
+		    + testcat.getId().intValue());
+	    item.setValue(testcat.getName().length() > 20
+		    ? testcat.getName().substring(0, 20) + "..."
+		    : testcat.getName());
+	    item.setTitle(testcat.getName());
+	    tempstack.push(item);
+	    while (testcat.getCategory() != null) {
+		testcat = testcat.getCategory();
+		item = new DefaultMenuItem();
+		item.setUrl(Faces.getRequestBaseURL()
+			+ "v2/category.xhtml?id="
+			+ testcat.getId().intValue());
+		item.setValue(testcat.getName().length() > 20
+			? testcat.getName().substring(0, 20) + "..."
+			: testcat.getName());
+		item.setTitle(testcat.getName());
+		tempstack.push(item);
+	    }
+	    item = new DefaultMenuItem();
+	    item.setUrl(Faces.getRequestBaseURL() + "v2/");
+	    item.setValue("Главная");
+	    item.setTitle("Главная");
+	    result.addElement(item);
+	    while (!tempstack.isEmpty())
+		result.addElement(tempstack.pop());
+
+	}
+	return result;
+    }
 }

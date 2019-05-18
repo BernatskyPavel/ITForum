@@ -1,0 +1,222 @@
+@charset "UTF-8";
+@import 'https://fonts.googleapis.com/css?family=Inconsolata';
+
+html{
+	height:100%;
+}
+
+body {
+	margin:0;
+	padding:0;
+	box-sizing: border-box;
+	height: 100%;
+	background-color: #000000;
+	background-image: radial-gradient(#11581E, #041607);
+	font-family: 'Inconsolata', Helvetica, sans-serif !important;
+	font-size: 1rem;
+	color: rgba(128, 255, 128, 0.8) !important;
+	text-shadow: 0 0 1ex rgba(51, 255, 51, 1), 0 0 2px
+		rgba(255, 255, 255, 0.8) !important;
+}
+
+.overlay {
+	pointer-events: none;
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	background: repeating-linear-gradient(180deg, rgba(0, 0, 0, 0) 0,
+		rgba(0, 0, 0, 0.3) 50%, rgba(0, 0, 0, 0) 100%);
+	background-size: auto 4px;
+	z-index: 1100;
+}
+
+.overlay::before {
+	content: "";
+	pointer-events: none;
+	position: absolute;
+	display: block;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	width: 100%;
+	height: 100%;
+	background-image: linear-gradient(0deg, transparent 0%, rgba(32, 128, 32, 0.2)
+		2%, rgba(32, 128, 32, 0.8) 3%, rgba(32, 128, 32, 0.2) 3%, transparent
+		100%);
+	background-repeat: no-repeat;
+	animation: scan 7.5s linear 0s infinite;
+}
+
+@keyframes scan {
+  0%        { background-position: 0 -100vh; }
+  35%, 100% { background-position: 0 100vh; }
+}
+
+.logoLink{
+	text-decoration:none;
+}
+
+pre{
+	color: rgba(128, 255, 128, 0.8);
+	text-shadow:none;
+}
+
+.ui-button{
+	background: transparent;
+	border: 0;
+	box-shadow: none;
+}
+
+.ui-button-text{
+	color: rgba(128, 255, 128, 0.5);
+	text-shadow: 0 0 1ex rgba(51, 255, 51, 0.5), 0 0 2px
+		rgba(255, 255, 255, 0.8);
+	text-decoration:none;
+}
+
+.ui-button:hover{
+	background-color: transparent;
+}
+
+.ui-button-text:hover{
+	text-shadow: 0 0 1ex rgba(51, 255, 51, 1), 0 0 2px
+		rgba(255, 255, 255, 0.8);
+}
+
+.ui-state-default{
+	border: none;
+	background: none;
+	box-shadow: none;
+}
+
+.ui-column-title, .ui-dialog-header {
+   color: rgba(128, 255, 128, 0.5);
+   text-shadow: 0 0 1ex rgba(51, 255, 51, 0.5), 0 0 2px
+		rgba(255, 255, 255, 0.8);
+}
+
+.ui-widget-content {
+    border: none;
+    background: none;
+    box-shadow: none;
+    color: rgba(128, 255, 128, 0.5);
+    text-shadow: 0 0 1ex rgba(51, 255, 51, 0.5), 0 0 2px
+		rgba(255, 255, 255, 0.8);
+}
+
+.ui-widget-content a {
+    text-decoration: none;
+    color: rgba(128, 255, 128, 0.5);
+}
+
+.ui-widget-content a:hover {
+    text-shadow: 0 0 1ex rgba(51, 255, 51, 1), 0 0 2px
+		rgba(255, 255, 255, 0.8);
+}
+
+.ui-datatable thead th, .ui-datatable tbody td, .ui-datatable tfoot td, .ui-datatable tfoot th {
+    border: 0;
+}
+
+.ui-datatable-data, .ui-datatable-header, .ui-datatable thead {
+	 border: 2px solid rgba(128, 255, 128, 0.5) !important;
+}
+
+.ui-datatable{
+	margin-bottom:10px;
+}
+
+.ui-datatable-header {
+	background: none !important;
+	border-bottom: 0 none !important;
+	border-radius:0 !important;
+}
+
+.ui-outputlabel{
+	color: rgba(128, 255, 128, 0.5);
+    text-shadow: 0 0 1ex rgba(51, 255, 51, 0.5), 0 0 2px
+		rgba(255, 255, 255, 0.8);
+}
+
+.ui-breadcrumb{
+	background: none;
+	border: none !important;
+	box-shadow: none;
+}
+
+.ui-dialog{
+	border-radius: 0px !important;
+}
+
+.ui-datatable-tablewrapper {
+    overflow: hidden;
+}
+
+.dialog, .ui-dialog{
+	height: 320px;
+	width: 480px;	
+}
+
+.dialog-body{
+	height:100%;
+}
+
+.dialog-header, .ui-dialog-titlebar{
+	width: 100%;
+	display:flex;
+	background: -webkit-linear-gradient(left,#08216b,#a5cef7) !important;
+	background: linear-gradient(left,#08216b,#a5cef7) !important;
+	padding: 0  !important;
+	border-radius: 0 !important;
+}
+
+.dialog-title, .ui-dialog-title{
+	color: white;
+	font-family: 'Inconsolata', Helvetica, sans-serif;
+	margin: 2px !important;
+	font-size:14px !important;
+	align-self: center;
+}
+
+.dialog-button, .ui-dialog-titlebar-close, .ui-dialog-titlebar-close:hover{
+	border: 1px solid #fff;
+	border-right-color: #424242;
+	border-bottom-color: #424242;
+	background: silver;
+  	height: 14px;
+	width: 14px;
+	color: transparent;
+	text-decoration: none;
+	background-position: 50%;
+	background-repeat: no-repeat;
+	margin:2px 2px 2px auto !important;
+	border-radius:0 !important;
+	background-image: url(../images/close.png);
+	padding:0 !important;
+}
+
+.dialog-borders, .ui-dialog{
+	height:100%;
+	box-shadow: 1px 1px 0 0 #424242;
+	border: 1px solid #fff;
+	border-right-color: #848484;
+	border-bottom-color: #848484;
+	background: silver !important;
+	padding: 2px;
+}
+
+.ui-dialog-titlebar-close > span{
+	display:none !important;
+}
+
+.ui-dialog-content{
+	color: black;
+	text-shadow: none;
+}
+
+#logout, #cabinet, #signup, #ajax-login{
+	background: none;
+	border: none;
+	font-size: 1rem;
+}

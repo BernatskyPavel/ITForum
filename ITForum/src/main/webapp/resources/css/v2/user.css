@@ -1,0 +1,173 @@
+@charset "UTF-8";
+
+#tab_container>.ui-tabs-nav {
+	background: none;
+}
+
+#tab_container>.ui-tabs-nav>.ui-tabs-header {
+	background-color: #60c561;
+	border: 1px solid rgba(128, 255, 128, 0.8);
+}
+
+#file {
+	background: none;
+	border: none;
+}
+
+#file>.ui-fileupload-content {
+	display: none;
+}
+
+#file>.ui-fileupload-buttonbar, #file>.ui-fileupload-buttonbar>.ui-fileupload-choose
+	{
+	background: none;
+	border: none;
+	font-size: 1.2rem;
+	padding: unset;
+	margin: unset;
+}
+
+#about_tab, #list_tab, #email_tab {
+	background-color: rgba(51, 255, 51, 0.2);
+	border: 1px solid rgba(128, 255, 128, 0.8);
+}
+
+#email_tab>div>ul>li, #email_tab>div>ul {
+	background: none;
+	border: none;
+}
+
+#email_tab>div>div {
+	background: none;
+	border-color: rgba(128, 255, 128, 0.8);
+	border-width: 0px 0px 0px 1px;
+	border-style: solid;
+}
+
+#tab_container {
+	
+}
+
+#tab_container>.ui-tabs-panels {
+	background: none;
+	border: none;
+}
+
+#selfinfo, #userinfo {
+	border-color: rgba(128, 255, 128, 0.8);
+	border-width: 0px 0px 0px 1px;
+	border-style: solid;
+	background: none;
+}
+
+#selfinfo_content, #selfinfo_content>div>div, #userinfo_content,
+	#userinfo_content>div>div, #userinfo_content>div>div>div>div {
+	background: none;
+	border: none;
+	color: white;
+}
+
+#selfinfo_form {
+	
+}
+
+#selfinfo_form>div>div {
+	background: none;
+	border: none;
+	color: white;
+}
+
+#selfinfo_form>div>div>span>span.ui-state-highlight {
+	background-color: rgba(51, 255, 51, 0.3);
+	color: inherit;
+}
+
+#inboxList_content, #outboxList_content {
+	background: none;
+	border: none;
+	color: white;
+}
+
+#inboxList_list, #outboxList_list {
+	
+}
+
+#showEmail>div>div, #showOEmail>div>div {
+	background: none;
+	border: none;
+	color: white;
+}
+
+.itcode-email-box {
+	border-color: rgba(128, 255, 128, 0.8);
+	border-width: 0px 0px 0px 1px;
+	border-style: solid;
+}
+
+#sendEmail_content, #sendEmail_content>table>tbody>tr>td {
+	background: none;
+	border: none;
+	color: white;
+}
+
+#itcode-email-editor_editor {
+	height: 250px;
+	overflow-y: auto;
+}
+
+#itcode-email-editor-submit {
+	background: none;
+	border: none;
+	font-size: 1rem;
+}
+
+#inboxList_paginator_bottom, #outboxList_paginator_bottom,
+	#blackList_paginator_bottom, #friendList_paginator_bottom {
+	background: none;
+	border: none;
+}
+
+.ui-paginator-current, .ui-paginator-first, .ui-paginator-prev,
+	.ui-paginator-next, .ui-paginator-last, .ui-paginator-page {
+	color: rgba(128, 255, 128, 0.5) !important;
+}
+
+.ui-state-active {
+	background-color: rgba(0, 255, 0, 0.1) !important;
+}
+
+.ui-state-hover {
+	background-color: rgba(234, 234, 234, 0.1) !important;
+}
+
+#blackList>div.ui-datalist-header, #friendList>div.ui-datalist-header {
+	background: none;
+	border: none;
+}
+
+#blackList>div.ui-datalist-header, #blackList_list>li>a,
+	#blackList_content>div {
+	color: red;
+}
+
+#blackList_content, #friendList_content {
+	padding: 0;
+	margin: 0;
+	background: none;
+	border: none;
+}
+
+#friendList>div.ui-datalist-header, #friendList_list>li>a,
+	#friendList_content>div {
+	color: white;
+}
+
+.infoPanel>div {
+	color: white;
+}
+
+#flbutton, #blbutton, #mblockbutton, #ablockbutton, #munblockbutton,
+	#aunblockbutton {
+	border: none;
+	background: none;
+}

@@ -16,7 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import services.UserAccountService;
 
-@WebFilter(urlPatterns = { "/service.xhtml" })
+@WebFilter(urlPatterns = { "/v2/service.xhtml" })
 public class ServiceFilter implements Filter {
 
     @Inject
@@ -33,22 +33,22 @@ public class ServiceFilter implements Filter {
 		code = httprequest.getParameter("code");
 	if (null == code) {
 	    httpresponse.sendRedirect(
-		    httprequest.getContextPath() + "/home.xhtml");
+		    httprequest.getContextPath() + "/v2/error.xhtml");
 	    return;
 	}
 	if (null == id) {
 	    httpresponse.sendRedirect(
-		    httprequest.getContextPath() + "/home.xhtml");
+		    httprequest.getContextPath() + "/v2/error.xhtml");
 	    return;
 	}
 	if (!StringUtils.isNumeric(id)) {
 	    httpresponse.sendRedirect(
-		    httprequest.getContextPath() + "/home.xhtml");
+		    httprequest.getContextPath() + "/v2/error.xhtml");
 	    return;
 	}
 	if (null == userService.getById(Integer.parseInt(id))) {
 	    httpresponse.sendRedirect(
-		    httprequest.getContextPath() + "/home.xhtml");
+		    httprequest.getContextPath() + "/v2/error.xhtml");
 	    return;
 	}
 	chain.doFilter(request, response);

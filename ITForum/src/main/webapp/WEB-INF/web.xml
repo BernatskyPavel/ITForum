@@ -13,8 +13,8 @@
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<context-param>
-		<param-name>primefaces.THEME</param-name>
-		<param-value>bootstrap</param-value>
+	    <param-name>primefaces.THEME</param-name>
+	    <param-value>nova-light</param-value>
 	</context-param>
 	<servlet-mapping>
 		<servlet-name>Faces Servlet</servlet-name>

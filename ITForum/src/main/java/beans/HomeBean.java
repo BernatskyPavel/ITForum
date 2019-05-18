@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.ResourceDependencies;
+import javax.faces.application.ResourceDependency;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
@@ -17,6 +19,11 @@ import services.StatusService;
 
 @Named
 @ViewScoped
+@ResourceDependencies({
+    @ResourceDependency(name = "fa/font-awesome.css", library ="primefaces" ),
+    @ResourceDependency(name = "components.css", library ="primefaces" ),
+    @ResourceDependency(name = "theme.css", library ="primefaces-bootstrap" )
+})
 public class HomeBean implements Serializable{
     /**
      * 

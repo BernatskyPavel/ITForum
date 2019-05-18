@@ -45,7 +45,7 @@ public class ServiceBean implements Serializable {
 	Integer userId = Integer.parseInt(userIdString);
 	userService.verifyUser(userId, verifyCode, verified);
 	try {
-	    response.sendRedirect(request.getContextPath() + "/home.xhtml");
+	    response.sendRedirect(request.getContextPath() + "/v2/home.xhtml");
 	} catch (IOException e) {
 	    // TODO Auto-generated catch block
 	    e.printStackTrace();

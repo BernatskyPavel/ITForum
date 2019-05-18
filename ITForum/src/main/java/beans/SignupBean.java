@@ -158,8 +158,7 @@ public class SignupBean implements Serializable {
 	this.user.setGender(this.gender);
 	this.user.setAbout(this.about);
 	this.user.setAdress(this.adress);
-	this.user.setBirthday(new Timestamp(this.birthday.getTime()));
-	System.out.println(this.birthday.toString());
+	this.user.setBirthday(this.birthday!=null?new Timestamp(this.birthday.getTime()):null);
 	userService.flushChanges(this.user);
 	sendMail();
 

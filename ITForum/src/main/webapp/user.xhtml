@@ -47,14 +47,20 @@
 									actionListener="#{userAccountBean.setFriendlist}"
 									update="@form" />
 								<p:commandButton title="В ЧС" id="blbutton"
-									rendered="#{sessionBean.loginStatus == true and sessionBean.user.id.intValue() != userAccountBean.user.id.intValue() and not sessionBean.user.isInBlacklist(userAccountBean.user.id)}"
+									rendered="#{sessionBean.loginStatus == true and sessionBean.user.id.intValue() != userAccountBean.user.id.intValue() and not sessionBean.user.isInBlacklist(userAccountBean.user.id) and not userAccountBean.user.blocked}"
 									actionListener="#{userAccountBean.setBlacklist}" update="@form" />
 								<p:commandButton title="Заблокировать" id="mblockbutton"
 									rendered="#{sessionBean.loginStatus == true and sessionBean.user.id.intValue() != userAccountBean.user.id.intValue() and sessionBean.user.isModerator and not userAccountBean.user.isModerator and not userAccountBean.user.isAdmin and not userAccountBean.user.blocked}"
-									actionListener="#{userAccountBean.blockUser}" update="@form" />
+									actionListener="#{userAccountBean.changeUserStatus(true)}" update="@form" />
 								<p:commandButton title="Заблокировать" id="ablockbutton"
 									rendered="#{sessionBean.loginStatus == true and sessionBean.user.id.intValue() != userAccountBean.user.id.intValue() and sessionBean.user.isAdmin and not userAccountBean.user.isAdmin and not userAccountBean.user.blocked}"
-									actionListener="#{userAccountBean.blockUser}" update="@form" />
+									actionListener="#{userAccountBean.changeUserStatus(true)}" update="@form" />
+								<p:commandButton title="Разаблокировать" id="munblockbutton"
+									rendered="#{sessionBean.loginStatus == true and sessionBean.user.id.intValue() != userAccountBean.user.id.intValue() and sessionBean.user.isModerator and not userAccountBean.user.isModerator and not userAccountBean.user.isAdmin and userAccountBean.user.blocked}"
+									actionListener="#{userAccountBean.changeUserStatus(false)}" update="@form" />
+								<p:commandButton title="Разблокировать" id="aunblockbutton"
+									rendered="#{sessionBean.loginStatus == true and sessionBean.user.id.intValue() != userAccountBean.user.id.intValue() and sessionBean.user.isAdmin and not userAccountBean.user.isAdmin and userAccountBean.user.blocked}"
+									actionListener="#{userAccountBean.changeUserStatus(false)}" update="@form" />
 							</h:form>
 						</div>
 						<div class="ui-lg-8 ui-g-nopad">

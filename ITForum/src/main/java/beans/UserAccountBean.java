@@ -223,8 +223,23 @@ public class UserAccountBean implements Serializable {
 	return this.user.getFriendlists2().stream().map(x->x.getUserAccount1().getUsername()).filter(x->x.startsWith(query)).collect(Collectors.toList());
     }
     
+    public void changeUserStatus(boolean block) {
+	int status = block ? UserStatusService.Statuses.BLOCKED.getId() : UserStatusService.Statuses.VERIFIED.getId();
+	this.userAccountService.changeStatus(this.user, status);
+	this.user = this.userAccountService.getById(this.user.getId());
+	this.history.setUFLHash(this.session.getUser().getId().intValue(),
+		DigestUtils.md5Hex((new Date()).toString()));
+    }
+    
     public void blockUser() {
 	this.userAccountService.changeStatus(this.user, UserStatusService.Statuses.BLOCKED.getId());
+	this.user = this.userAccountService.getById(this.user.getId());
+	this.history.setUFLHash(this.session.getUser().getId().intValue(),
+		DigestUtils.md5Hex((new Date()).toString()));
+    }
+    
+    public void unblockUser() {
+	this.userAccountService.changeStatus(this.user, UserStatusService.Statuses.VERIFIED.getId());
 	this.user = this.userAccountService.getById(this.user.getId());
 	this.history.setUFLHash(this.session.getUser().getId().intValue(),
 		DigestUtils.md5Hex((new Date()).toString()));

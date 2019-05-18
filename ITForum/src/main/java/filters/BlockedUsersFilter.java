@@ -2,7 +2,6 @@ package filters;
 
 import java.io.IOException;
 
-import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -36,7 +35,7 @@ public class BlockedUsersFilter implements Filter {
 	    UserAccount temp = this.userService.getById(this.session.getUser().getId());
 	    if (temp.isBlocked()) {
 		httprequest.getSession().invalidate();
-		httpresponse.sendRedirect(httprequest.getContextPath() + "/home.xhtml");
+		httpresponse.sendRedirect(httprequest.getContextPath() + "/v2/home.xhtml");
 		return;
 	    } else {
 		this.session.refresh();

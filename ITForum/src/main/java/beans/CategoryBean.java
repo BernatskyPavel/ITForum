@@ -14,6 +14,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.primefaces.model.menu.MenuModel;
 
 import model.Category;
 import model.Thread;
@@ -48,7 +49,10 @@ public class CategoryBean implements Serializable {
     @Size(max = 255, message = "Превышен максимальный размер!")
     private String newPostHeader;
     @NotNull
+    @Size(max = 15000, message = "Превышен максимальный размер!")
     private String newPostContent;
+    
+    private MenuModel breadcrumbs;
 
     @PostConstruct
     public void init() {
@@ -62,6 +66,7 @@ public class CategoryBean implements Serializable {
 		    .getApprovedSubCategories();
 	}
 	this.updateThreadHash = UpdateHistoryService.getStarthash();
+	breadcrumbs = applicationService.getBreadcrumbPath(this.currentCategory);
     }
 
     public void refresh() {
@@ -193,5 +198,19 @@ public class CategoryBean implements Serializable {
      */
     public void setSelectedThread(Thread selectedThread) {
 	this.selectedThread = selectedThread;
+    }
+
+    /**
+     * @return the breadcrumbs
+     */
+    public MenuModel getBreadcrumbs() {
+	return breadcrumbs;
+    }
+
+    /**
+     * @param breadcrumbs the breadcrumbs to set
+     */
+    public void setBreadcrumbs(MenuModel breadcrumbs) {
+	this.breadcrumbs = breadcrumbs;
     }
 }

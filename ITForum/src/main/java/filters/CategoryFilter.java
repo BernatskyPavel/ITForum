@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import services.CategoryService;
 import org.apache.commons.lang3.*;
 
-@WebFilter(urlPatterns = {"/category.xhtml"})
+@WebFilter(urlPatterns = {"/v2/category.xhtml"})
 public class CategoryFilter implements Filter {
     
     @Inject
@@ -33,15 +33,15 @@ public class CategoryFilter implements Filter {
 	}
 	String id = httprequest.getParameter("id");
 	if(null == id) {
-	    httpresponse.sendRedirect(httprequest.getContextPath() + "/home.xhtml");
+	    httpresponse.sendRedirect(httprequest.getContextPath() + "/v2/error.xhtml");
 	    return;
 	}
 	if(!StringUtils.isNumeric(id)) {
-	    httpresponse.sendRedirect(httprequest.getContextPath() + "/home.xhtml");
+	    httpresponse.sendRedirect(httprequest.getContextPath() + "/v2/error.xhtml");
 	    return;
 	}
 	if(null == categoryService.getById(Integer.parseInt(id))){
-	    httpresponse.sendRedirect(httprequest.getContextPath() + "/home.xhtml");
+	    httpresponse.sendRedirect(httprequest.getContextPath() + "/v2/error.xhtml");
 	    return;
 	}
 	chain.doFilter(request, response);

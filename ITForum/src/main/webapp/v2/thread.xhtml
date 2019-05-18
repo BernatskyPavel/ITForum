@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:scriptfree="http://jakarta.apache.org/taglibs/standard/scriptfree"
+	xmlns:permittedTaglibs="http://jakarta.apache.org/taglibs/standard/permittedTaglibs"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head></h:head>
+<h:body>
+	<ui:composition template="/shared/layout-v2.xhtml">
+		<ui:define name="links">
+			
+			<script src="${homeBean.URLWithContextPath}/ckeditor/ckeditor.js" />
+			<script
+				src="${homeBean.URLWithContextPath}/resources/js/runnableCode.js" />
+			<link href="${homeBean.URLWithContextPath}/resources/css/thread.css"
+				rel="stylesheet" type="text/css" />
+			<link href="${homeBean.URLWithContextPath}/resources/css/v2/thread.css"
+				rel="stylesheet" type="text/css" />
+			<link rel="stylesheet"
+				href="${homeBean.URLWithContextPath}/resources/css/styles/tomorrow-night.css" />
+			<script
+				src="${homeBean.URLWithContextPath}/resources/js/highlight.pack.js"></script>
+		</ui:define>
+		<ui:define name="content">
+			<p:breadCrumb model="#{threadBean.breadcrumbs}" id="breadcrumb">
+			</p:breadCrumb>
+			<p:panel id="basic" header="#{threadBean.currentThread.subject}"
+				style="margin-bottom:20px">
+				<h:panelGrid columns="2"
+					columnClasses="logo,detail" style="width:100%;">
+					<p:outputPanel styleClass="postUser">
+						<h:outputLink
+							value="#{homeBean.URLWithContextPath}/v2/user.xhtml?id=#{threadBean.currentThread.userAccount.id}">
+							<h:outputText
+								value="#{threadBean.currentThread.userAccount.username}"
+								styleClass="postUsername">
+							</h:outputText>
+						</h:outputLink>
+						<br />
+						<p:graphicImage
+							url="#{homeBean.URLWithContextPath}/resources/images/man-no.png"
+							height="120px" width="120px" />
+					</p:outputPanel>
+					<p:outputPanel>
+						<h:outputText value="#{threadBean.currentThread.content}"
+							escape="false" />
+					</p:outputPanel>
+
+					<!-- 							<p:commandLink update=":form:carDetail"
+								oncomplete="PF('carDialog').show()" title="View Detail">
+								<h:outputText styleClass="ui-icon pi pi-search"
+									style="margin:0 auto;" />
+								<f:setPropertyActionListener value="#{car}"
+									target="#{dataGridView.selectedCar}" />
+							</p:commandLink> -->
+				</h:panelGrid>
+			</p:panel>
+			<!-- <p:dataList value="#{threadBean.approvedPosts}" var="post"
+				type="unordered" itemType="none" paginator="true"
+				paginatorPosition="bottom" rows="10" styleClass="paginated">
+
+				<p:panel id="post-#{post.id}" header="#{post.subject}"
+					style="margin-bottom:20px">
+					<h:panelGrid columns="2" cellpadding="10">
+						<p:graphicImage
+							url="#{homeBean.URLWithContextPath}/resources/images/man-no.png" />
+						<h:outputText value="#{post.contents}" escape="false" />
+					</h:panelGrid>
+				</p:panel>
+
+			</p:dataList> -->
+			<h:panelGroup id="postsPanel">
+				<h:form id="form" prependId="false">
+					<p:dataView var="post" value="#{threadBean.approvedPosts}"  id="postsData"
+						rows="10" paginator="true" rowsPerPageTemplate="5,10,15"
+						paginatorPosition="bottom"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						layout="list" paginatorAlwaysVisible="false">
+
+						<p:dataViewListItem>
+							<h:panelGrid columns="2" style="width: 100%;"
+								columnClasses="logo,detail">
+								<p:outputPanel styleClass="postUser">
+									<h:outputLink
+										value="#{homeBean.URLWithContextPath}/v2/user.xhtml?id=#{post.userAccount.id}">
+										<h:outputText value="#{post.userAccount.username}"
+											styleClass="postUsername">
+										</h:outputText>
+									</h:outputLink>
+									<br />
+									<p:graphicImage
+										url="#{homeBean.URLWithContextPath}/resources/images/man-no.png"
+										height="120px" width="120px" />
+								</p:outputPanel>
+								<p:outputPanel>
+									<h:outputText value="#{post.contents}" escape="false" />
+									<br/>
+									<h:outputText value="#{post.created}"
+											styleClass="postUsername">
+										</h:outputText>
+								</p:outputPanel>
+
+								<!-- 							<p:commandLink update=":form:carDetail"
+								oncomplete="PF('carDialog').show()" title="View Detail">
+								<h:outputText styleClass="ui-icon pi pi-search"
+									style="margin:0 auto;" />
+								<f:setPropertyActionListener value="#{car}"
+									target="#{dataGridView.selectedCar}" />
+							</p:commandLink> -->
+							</h:panelGrid>
+
+						</p:dataViewListItem>
+					</p:dataView>
+				</h:form>
+			</h:panelGroup>
+			<br />
+			<h:form rendered="#{sessionBean.loginStatus == true and not threadBean.currentThread.completed}"
+				prependId="false">
+				<div id="editor"></div>
+				<h:inputHidden value="#{threadBean.postText}" id="editorValue" />
+				<p:commandButton
+					onclick="document.getElementById('editorValue').value = CKEDITOR.instances.editor.getData();CKEDITOR.instances.editor.setData();"
+					action="#{threadBean.createPost()}" value="Post"
+					update=":postsPanel" />
+			</h:form>
+			<script>
+				CKEDITOR.replace( 'editor');
+			</script>
+			<br/>
+			<h:outputText value="#{threadBean.approvedPosts.size()}"></h:outputText>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

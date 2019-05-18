@@ -17,7 +17,6 @@ import org.dom4j.io.SAXReader;
 @ApplicationScoped
 public class DbService {
     private EntityManagerFactory emFactory;
-
     @PostConstruct
     public void init() {
 	SAXReader reader = new SAXReader();
@@ -35,17 +34,12 @@ public class DbService {
 	    // TODO Auto-generated catch block
 	    e.printStackTrace();
 	}
-	
-
     }
-    
     @PreDestroy
     public void destroy() {
 	emFactory.close();
     }
-    
     public EntityManager getManager() {
 	return emFactory.createEntityManager();
     }
-
 }

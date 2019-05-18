@@ -165,9 +165,7 @@ public class UserAccountService implements IService<UserAccount> {
 	manager.getTransaction().begin();
 	TypedQuery<UserStatus> statusQuery = manager.createNamedQuery(
 		"UserStatus.findById", UserStatus.class);
-	statusQuery.setParameter("id",
-		UserStatusService.Statuses.BLOCKED
-			.getId());
+	statusQuery.setParameter("id",sid);
 	try {
 	    status = statusQuery.getSingleResult();
 	} catch (Exception e) {

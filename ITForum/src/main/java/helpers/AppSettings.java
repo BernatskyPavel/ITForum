@@ -141,7 +141,7 @@ public final class AppSettings {
 		+ "                        <table border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\r\n"
 		+ "                          <tr>\r\n"
 		+ "                              <td align=\"center\" style=\"border-radius: 3px;\" bgcolor=\"#FFA73B\"><a href=\""
-		+ Faces.getRequestBaseURL() + "service.xhtml?uid="
+		+ Faces.getRequestBaseURL() + "v2/service.xhtml?uid="
 		+ userId + "&code=" + verifyCode
 		+ "\" target=\"_blank\" style=\"font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #FFA73B; display: inline-block;\">Confirm Account</a></td>\r\n"
 		+ "                          </tr>\r\n"
@@ -161,10 +161,10 @@ public final class AppSettings {
 		+ "                <tr>\r\n"
 		+ "                  <td bgcolor=\"#ffffff\" align=\"left\" style=\"padding: 20px 30px 20px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;\" >\r\n"
 		+ "                    <p style=\"margin: 0;\"><a href=\""
-		+ Faces.getRequestBaseURL() + "service.xhtml?uid="
+		+ Faces.getRequestBaseURL() + "v2/service.xhtml?uid="
 		+ userId + "&code=" + verifyCode
 		+ "\" target=\"_blank\" style=\"color: #FFA73B;\">"
-		+ Faces.getRequestBaseURL() + "service.xhtml?uid="
+		+ Faces.getRequestBaseURL() + "v2/service.xhtml?uid="
 		+ userId + "&code=" + verifyCode + "</a></p>\r\n"
 		+ "                  </td>\r\n"
 		+ "                </tr>\r\n"

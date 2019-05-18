@@ -1,0 +1,78 @@
+@charset "UTF-8";
+
+.logo {
+	width: 10%;
+	vertical-align: top;
+	border-right: 1px solid rgba(128, 255, 128, 0.5);
+}
+
+.detail {
+	padding-left: 10px;
+}
+
+#basic_header {
+	background: transparent;
+	border: 0;
+	color: rgba(128, 255, 128, 0.5);
+}
+
+#basic_content {
+	background: transparent;
+	border-style: solid;
+	border-width: 1px 0px 1px 0px;
+	border-color: rgba(128, 255, 128, 0.5);
+	color: rgba(128, 255, 128, 0.5);
+}
+
+#basic_content>table {
+	width: 100%;
+}
+
+.ui-dataview-header {
+	display: none;
+}
+
+#postsData_content, .ui-dataview-list .ui-dataview-row {
+	background: transparent;
+	border-style: solid;
+	border-width: 1px 0px 1px 0px;
+	border-color: rgba(128, 255, 128, 0.5);
+	color: rgba(128, 255, 128, 0.5);
+}
+
+#postsData {
+	border: 0;
+}
+
+#postsData_paginator_bottom {
+	background: none;
+	border: none;
+}
+
+.ui-paginator-current, .ui-paginator-first, .ui-paginator-prev,
+	.ui-paginator-next, .ui-paginator-last, .ui-paginator-page {
+	color: rgba(128, 255, 128, 0.5) !important;
+}
+
+.ui-state-active {
+	background-color: rgba(0, 255, 0, 0.1) !important;
+}
+
+.ui-state-hover {
+    background-color: rgba(234,234,234,0.1) !important;
+}
+
+select option {
+	background: none;
+}
+
+#breadcrumb{
+	background:none;
+	margin: 0;
+	padding: 0;
+}
+
+
+#breadcrumb>ul>li>a, #breadcrumb>ul>li{
+	color: rgb(128, 255, 128, 0.8);
+}

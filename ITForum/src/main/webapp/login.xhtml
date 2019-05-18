@@ -15,19 +15,22 @@
 			<h:panelGrid id="grid" columns="3" cellpadding="5">
 				<h:outputLabel for="login" value="Логин:" style="font-weight:bold" />
 				<p:inputText id="login" placeholder="Логин или эл. почта"
-					required="true" requiredMessage="Поле не может быть пустым" label="Login" value="#{sessionBean.login}" />
+					required="true" requiredMessage="Поле не может быть пустым"
+					label="Login" value="#{sessionBean.login}" />
 				<p:message for="login" />
 
 				<h:outputLabel for="password" value="Пароль:"
 					style="font-weight:bold" />
-				<p:password id="password" required="true" requiredMessage="Поле не может быть пустым" label="Password"
+				<p:password id="password" required="true"
+					requiredMessage="Поле не может быть пустым" label="Password"
 					value="#{sessionBean.password}" />
 				<p:message for="password" />
 
 			</h:panelGrid>
-			<p:commandButton value="Войти" update="grid, ptext" icon="pi pi-check"
-				validateClient="true" actionListener="#{sessionBean.tryLogIn}"
-				style="margin-right:10px">
+			<p:commandButton value="Войти" update="grid, ptext"
+				icon="pi pi-check" validateClient="true"
+				actionListener="#{sessionBean.tryLogIn}"
+				style="margin-right:10px;">
 				<p:ajax update="ptext" event="click"></p:ajax>
 			</p:commandButton>
 		</h:form>
